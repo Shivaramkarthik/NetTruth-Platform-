@@ -9,8 +9,25 @@ export default defineConfig({
       '/api': {
         target: 'http://127.0.0.1:8000',
         changeOrigin: true,
-        timeout: 5000, // Fails in 5s instead of hanging for 1 minute if backend is off
+        timeout: 60000, // Allow up to 60s for slow speed tests
       },
     },
   },
+  build: {
+    // Split vendor libraries into separate cached chunks
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'react-vendor':  ['react', 'react-dom'],
+          'motion':        ['framer-motion'],
+          'leaflet':       ['leaflet'],
+        },
+      },
+    },
+    // Enable CSS code-splitting per lazy-loaded chunk
+    cssCodeSplit: true,
+    // Raise the warning threshold (video is served separately, not bundled)
+    chunkSizeWarningLimit: 600,
+  },
 })
+

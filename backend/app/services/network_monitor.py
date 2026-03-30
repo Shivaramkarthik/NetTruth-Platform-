@@ -94,7 +94,7 @@ class NetworkMonitor:
         Run simulated speed test for development/testing.
         """
         # Simulate network delay
-        await asyncio.sleep(2)
+        # No delay in simulated mode for instant response
         
         # Generate realistic-looking results with some variance
         base_download = 85  # Base speed in Mbps

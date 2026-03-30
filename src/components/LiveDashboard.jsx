@@ -43,9 +43,9 @@ const RunSpeedTestPanel = () => {
 
   return (
     <div className="dashboard-panel">
-      <PanelHeader title="run_speed_test()" endpoint="POST /api/v1/network/speed-test" live />
+      <PanelHeader title="Run Speed Test" endpoint="Real-time network speed measurement" live />
       <button className="api-btn api-btn-primary" onClick={handleClick} disabled={loading}>
-        {loading ? <><Spinner /> Running…</> : '▶ run_speed_test()'}
+        {loading ? <><Spinner /> Running…</> : '▶ Run Speed Test'}
       </button>
       {error && <p className="panel-error">⚠ {error}</p>}
       {data && (
@@ -61,18 +61,6 @@ const RunSpeedTestPanel = () => {
           <div className="speed-card">
             <div className="speed-card-val">{data.latency}</div>
             <div className="speed-card-label">latency (ms)</div>
-          </div>
-          <div className="result-box" style={{ gridColumn: '1/-1', marginTop: 0 }}>
-            <div className="result-row">
-              <span className="result-key">server</span>
-              <span className="result-val">{data.server}</span>
-            </div>
-            <div className="result-row">
-              <span className="result-key">timestamp</span>
-              <span className="result-val" style={{ fontSize: '0.72rem', color: 'var(--text-secondary)' }}>
-                {new Date(data.timestamp).toLocaleString()}
-              </span>
-            </div>
           </div>
         </motion.div>
       )}
@@ -95,9 +83,9 @@ const AnalyzeThrottlingPanel = () => {
 
   return (
     <div className="dashboard-panel">
-      <PanelHeader title="analyze_throttling()" endpoint="POST /api/v1/throttling/analyze" live />
+      <PanelHeader title="Analyze Throttling" endpoint="AI-powered traffic pattern analysis" live />
       <button className="api-btn api-btn-outline" onClick={handleClick} disabled={loading}>
-        {loading ? <><Spinner /> Analysing…</> : '⚡ analyze_throttling()'}
+        {loading ? <><Spinner /> Analysing…</> : '⚡ Analyze Throttling'}
       </button>
       {error && <p className="panel-error">⚠ {error}</p>}
       {data && (
@@ -157,9 +145,9 @@ const GetQuickCheckPanel = () => {
 
   return (
     <div className="dashboard-panel">
-      <PanelHeader title="get_quick_check()" endpoint="GET /api/v1/throttling/quick-check" live />
+      <PanelHeader title="Quick Check" endpoint="Instant status verification" live />
       <button className="api-btn api-btn-outline" onClick={handleClick} disabled={loading}>
-        {loading ? <><Spinner /> Checking…</> : '🔍 get_quick_check()'}
+        {loading ? <><Spinner /> Checking…</> : '🔍 Quick Check'}
       </button>
       {error && <p className="panel-error">⚠ {error}</p>}
       {data && (
@@ -195,9 +183,9 @@ const GetDashboardSummaryPanel = () => {
 
   return (
     <div className="dashboard-panel">
-      <PanelHeader title="get_dashboard_summary()" endpoint="GET /api/v1/dashboard/summary" live />
+      <PanelHeader title="Dashboard Summary" endpoint="Current network health overview" live />
       <button className="api-btn api-btn-outline" onClick={handleClick} disabled={loading}>
-        {loading ? <><Spinner /> Loading…</> : '📊 get_dashboard_summary()'}
+        {loading ? <><Spinner /> Loading…</> : '📊 Dashboard Summary'}
       </button>
       {error && <p className="panel-error">⚠ {error}</p>}
       {data && (
@@ -232,9 +220,9 @@ const GetISPRatingPanel = () => {
 
   return (
     <div className="dashboard-panel">
-      <PanelHeader title="get_isp_rating()" endpoint="GET /api/v1/dashboard/isp-rating" live />
+      <PanelHeader title="My ISP Rating" endpoint="Locally calculated score for your provider" live />
       <button className="api-btn api-btn-outline" onClick={handleClick} disabled={loading}>
-        {loading ? <><Spinner /> Loading…</> : '⭐ get_isp_rating()'}
+        {loading ? <><Spinner /> Loading…</> : '⭐ My ISP Rating'}
       </button>
       {error && <p className="panel-error">⚠ {error}</p>}
       {data && (
@@ -272,12 +260,18 @@ const PredictThrottlingPanel = () => {
 
   return (
     <div className="dashboard-panel dashboard-grid-full">
-      <PanelHeader title="predict_throttling()" endpoint="GET /api/v1/throttling/predict" live />
+      <PanelHeader title="Throttling Predictor" endpoint="Machine learning future projections" live />
       <button className="api-btn api-btn-outline" style={{ maxWidth: 300 }} onClick={handleClick} disabled={loading}>
-        {loading ? <><Spinner /> Predicting…</> : '🔮 predict_throttling()'}
+        {loading ? <><Spinner /> Predicting…</> : '🔮 Predict Throttling'}
       </button>
       {error && <p className="panel-error">⚠ {error}</p>}
-      {data?.predictions && (
+      {data?.error && !error && (
+        <div style={{ padding: '20px', textAlign: 'center', color: 'var(--text-secondary)' }}>
+          <p>⏳ {data.error}</p>
+          <p style={{ fontSize: '0.8rem', marginTop: '10px' }}>Requires {data.required} measurements (Have {data.available})</p>
+        </div>
+      )}
+      {data?.predictions && !data?.error && (
         <motion.div className="predict-list" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
           {data.predictions.map((p, i) => {
             const hour = new Date(p.hour).getHours();
@@ -312,18 +306,18 @@ const GetISPRankingsPanel = () => {
 
   return (
     <div className="dashboard-panel dashboard-grid-full">
-      <PanelHeader title="get_isp_rankings()" endpoint="GET /api/v1/crowdsource/isp-rankings" live />
+      <PanelHeader title="ISP Rankings" endpoint="Crowdsourced ISP performance data" live />
       {loading && <div className="panel-loading"><Spinner /> Loading rankings…</div>}
       {error && <p className="panel-error">⚠ {error}</p>}
       {data && (
         <motion.table className="isp-table" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
           <thead>
             <tr>
-              <th>rank</th>
-              <th>name</th>
-              <th>avg_speed (Mbps)</th>
-              <th>reliability (%)</th>
-              <th>user_rating</th>
+              <th>Rank</th>
+              <th>Provider</th>
+              <th>Avg Speed (Mbps)</th>
+              <th>Reliability (%)</th>
+              <th>User Rating</th>
             </tr>
           </thead>
           <tbody>
@@ -361,9 +355,9 @@ const GetNetworkLogsPanel = () => {
 
   return (
     <div className="dashboard-panel dashboard-grid-full">
-      <PanelHeader title="get_network_logs()" endpoint="GET /api/v1/network/logs" live />
+      <PanelHeader title="Recent Network Logs" endpoint="Audit trail of previous measurements" live />
       <button className="api-btn api-btn-outline" style={{ maxWidth: 300 }} onClick={handleClick} disabled={loading}>
-        {loading ? <><Spinner /> Fetching…</> : '📋 get_network_logs(limit=8)'}
+        {loading ? <><Spinner /> Fetching…</> : '📋 Recent Network Logs'}
       </button>
       {error && <p className="panel-error">⚠ {error}</p>}
       {data && (
@@ -413,9 +407,9 @@ const GenerateReportPanel = () => {
 
   return (
     <div className="dashboard-panel">
-      <PanelHeader title="generate_report()" endpoint="POST /api/v1/reports/generate" live />
+      <PanelHeader title="Generate Legal Report" endpoint="Evidence package for regulatory complaints" live />
       <button className="api-btn api-btn-primary" onClick={handleClick} disabled={loading}>
-        {loading ? <><Spinner /> Generating…</> : '📄 generate_report(type=legal)'}
+        {loading ? <><Spinner /> Generating…</> : '📄 Generate Legal Report'}
       </button>
       {error && <p className="panel-error">⚠ {error}</p>}
       {data && (
@@ -446,9 +440,6 @@ const LiveDashboard = () => {
       >
         Live <span style={{ color: 'var(--primary-accent)' }}>API Dashboard</span>
       </motion.h2>
-      <p style={{ textAlign: 'center', color: 'var(--text-secondary)', marginTop: '-2rem', marginBottom: '0.5rem', fontFamily: 'var(--font-mono)', fontSize: '0.75rem', letterSpacing: '1px' }}>
-        All buttons call the FastAPI backend at localhost:8000 — responses shown in real-time
-      </p>
 
       <div className="dashboard-grid">
 

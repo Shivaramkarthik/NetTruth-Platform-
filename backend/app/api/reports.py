@@ -39,11 +39,13 @@ class ReportResponse(BaseModel):
     period_start: datetime
     period_end: datetime
     isp_name: Optional[str]
-    summary_stats: Optional[dict]
-    ai_analysis: Optional[str]
-    pdf_filename: Optional[str]
+    summary: Optional[dict] = None # Alias for frontend
+    summary_stats: Optional[dict] = None
+    ai_analysis: Optional[str] = None
+    download_url: Optional[str] = None # For frontend
+    pdf_filename: Optional[str] = None
     created_at: datetime
-    generated_at: Optional[datetime]
+    generated_at: Optional[datetime] = None
 
     class Config:
         from_attributes = True
@@ -52,30 +54,28 @@ class ReportResponse(BaseModel):
 # Endpoints
 @router.post("/generate", response_model=ReportResponse)
 async def generate_report(
-    request: ReportRequest,
     background_tasks: BackgroundTasks,
+    request: ReportRequest = ReportRequest(),
     current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db)
 ):
     """
     Generate a legal complaint report.
-    
-    Creates a comprehensive PDF report including:
-    - Speed logs and statistics
-    - Graphs and visualizations
-    - AI detection summary
-    - ISP comparison
-    - Regulatory compliance format
     """
     period_end = datetime.utcnow()
     period_start = period_end - timedelta(days=request.period_days)
+    
+    # Handle shorthand from frontend
+    report_type = request.report_type
+    if report_type == "legal":
+        report_type = ReportType.LEGAL_COMPLAINT.value
     
     # Create report record
     title = request.title or f"Network Performance Report - {period_start.strftime('%Y-%m-%d')} to {period_end.strftime('%Y-%m-%d')}"
     
     report = Report(
         user_id=current_user.id,
-        report_type=request.report_type,
+        report_type=report_type,
         title=title,
         status=ReportStatus.PENDING,
         period_start=period_start,
@@ -90,15 +90,9 @@ async def generate_report(
     await db.commit()
     await db.refresh(report)
     
-    # Generate report in background
-    background_tasks.add_task(
-        generate_report_task,
-        report.id,
-        current_user.id,
-        period_start,
-        period_end,
-        request.include_graphs
-    )
+    # Set helper fields for response
+    report.summary = report.summary_stats or {}
+    report.download_url = f"/api/v1/reports/{report.id}/download"
     
     return report
 

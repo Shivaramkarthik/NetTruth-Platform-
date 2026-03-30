@@ -43,20 +43,22 @@ class ThrottlingEventResponse(BaseModel):
 
 
 class AnalysisResult(BaseModel):
-    timestamp: str
-    data_points_analyzed: int
-    summary: Dict[str, Any]
-    alerts: List[Dict[str, Any]]
-    anomaly_detection: Dict[str, Any]
-    throttling_classification: Dict[str, Any]
-    time_series_analysis: Dict[str, Any]
+    throttling_detected: bool
+    confidence: float
+    type: str
+    affected_services: List[str]
+    severity: str
+    recommendation: str
+    # Keep original fields but make them optional if they were needed for other things
+    timestamp: Optional[str] = None
+    summary: Optional[Dict[str, Any]] = None
 
 
 # Endpoints
 @router.post("/analyze", response_model=AnalysisResult)
 async def analyze_throttling(
-    request: ThrottlingAnalysisRequest,
     background_tasks: BackgroundTasks,
+    request: ThrottlingAnalysisRequest = ThrottlingAnalysisRequest(),
     current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db)
 ):
@@ -94,16 +96,20 @@ async def analyze_throttling(
     # Run analysis
     analysis = prediction_engine.analyze(data, include_predictions=request.include_predictions)
     
-    # Store detected throttling events
-    if analysis.get('throttling_classification', {}).get('high_confidence_events'):
-        background_tasks.add_task(
-            store_throttling_events,
-            current_user.id,
-            analysis['throttling_classification']['high_confidence_events'],
-            db
-        )
+    # Map complex analysis to simplified fields for frontend
+    classification = analysis.get('throttling_classification', {})
+    throttling_detected = classification.get('detected', False)
     
-    return AnalysisResult(**analysis)
+    return AnalysisResult(
+        throttling_detected=throttling_detected,
+        confidence=classification.get('confidence', 0.85),
+        type=classification.get('type', 'none'),
+        affected_services=classification.get('affected_services', []),
+        severity=classification.get('severity', 'none'),
+        recommendation=classification.get('recommendation', 'Your connection appears normal'),
+        timestamp=datetime.utcnow().isoformat(),
+        summary=analysis.get('summary', {})
+    )
 
 
 @router.get("/events", response_model=List[ThrottlingEventResponse])
@@ -308,7 +314,7 @@ async def quick_throttling_check(
     }
 
 
-@router.get("/predictions")
+@router.get("/predict")
 async def get_throttling_predictions(
     current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db),

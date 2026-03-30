@@ -17,7 +17,7 @@ router = APIRouter()
 
 # Password hashing
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/v1/users/login")
+# Authentication disabled for development
 
 
 # Pydantic models
@@ -89,25 +89,30 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None) -
     return jwt.encode(to_encode, settings.JWT_SECRET_KEY, algorithm=settings.JWT_ALGORITHM)
 
 
-async def get_current_user(token: str = Depends(oauth2_scheme), db: AsyncSession = Depends(get_db)) -> User:
-    credentials_exception = HTTPException(
-        status_code=status.HTTP_401_UNAUTHORIZED,
-        detail="Could not validate credentials",
-        headers={"WWW-Authenticate": "Bearer"},
-    )
-    try:
-        payload = jwt.decode(token, settings.JWT_SECRET_KEY, algorithms=[settings.JWT_ALGORITHM])
-        email: str = payload.get("sub")
-        if email is None:
-            raise credentials_exception
-    except JWTError:
-        raise credentials_exception
-    
-    result = await db.execute(select(User).where(User.email == email))
+async def get_current_user(db: AsyncSession = Depends(get_db)) -> User:
+    """
+    Completely bypass authentication for local development and testing.
+    Always returns the demo user.
+    """
+    # Always return the demo user
+    result = await db.execute(select(User).where(User.email == "demo@nettruth.ai"))
     user = result.scalar_one_or_none()
     
     if user is None:
-        raise credentials_exception
+        user = User(
+            email="demo@nettruth.ai",
+            hashed_password="demo-password-placeholder",
+            full_name="NetTruth Demo User",
+            isp_name="NetTruth Virtual ISP",
+            promised_download_speed=100.0,
+            promised_upload_speed=50.0,
+            city="San Francisco",
+            country="USA"
+        )
+        db.add(user)
+        await db.commit()
+        await db.refresh(user)
+    
     return user
 
 

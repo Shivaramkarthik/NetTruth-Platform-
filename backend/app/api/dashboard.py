@@ -18,15 +18,10 @@ router = APIRouter()
 
 # Pydantic models
 class DashboardSummary(BaseModel):
-    current_status: str
-    last_speed_test: Optional[Dict[str, Any]]
-    avg_download_24h: float
-    avg_upload_24h: float
-    avg_latency_24h: float
-    throttling_events_24h: int
-    throttling_events_7d: int
-    compliance_rate_7d: float
-    total_tests_7d: int
+    current_speed: Dict[str, float]
+    promised_speed: float
+    speed_delivery_rate: float
+    throttling_status: Dict[str, Any]
     alerts: List[Dict[str, Any]]
 
 
@@ -164,20 +159,17 @@ async def get_dashboard_summary(
         })
     
     return DashboardSummary(
-        current_status=current_status,
-        last_speed_test={
-            "download_speed": last_test.download_speed,
-            "upload_speed": last_test.upload_speed,
-            "latency": last_test.ping,
-            "timestamp": last_test.timestamp.isoformat()
-        } if last_test else None,
-        avg_download_24h=float(avg_24h.avg_download or 0),
-        avg_upload_24h=float(avg_24h.avg_upload or 0),
-        avg_latency_24h=float(avg_24h.avg_latency or 0),
-        throttling_events_24h=throttling_24h,
-        throttling_events_7d=throttling_7d,
-        compliance_rate_7d=compliance_rate,
-        total_tests_7d=total_tests_7d,
+        current_speed={
+            "download": last_test.download_speed if last_test else 0.0,
+            "upload": last_test.upload_speed if last_test else 0.0,
+            "latency": last_test.ping if last_test else 0.0
+        },
+        promised_speed=current_user.promised_download_speed or 100.0,
+        speed_delivery_rate=compliance_rate,
+        throttling_status={
+            "active": throttling_24h > 0,
+            "last_detected": datetime.utcnow().isoformat() if throttling_24h > 0 else None
+        },
         alerts=alerts
     )
 

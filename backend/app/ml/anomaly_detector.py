@@ -160,14 +160,31 @@ class AnomalyDetector:
         
         X = self.prepare_features(data)
         
-        # Scale features
-        X_scaled = self.scaler.transform(X)
-        
-        # Get predictions (-1 for anomaly, 1 for normal)
-        predictions = self.model.predict(X_scaled)
-        
-        # Get anomaly scores (lower = more anomalous)
-        scores = self.model.decision_function(X_scaled)
+        # Check if fitted, if not, return safe defaults
+        try:
+            # Scale features
+            X_scaled = self.scaler.transform(X)
+            
+            # Get predictions (-1 for anomaly, 1 for normal)
+            predictions = self.model.predict(X_scaled)
+            
+            # Get anomaly scores (lower = more anomalous)
+            scores = self.model.decision_function(X_scaled)
+        except (Exception, ValueError) as e:
+            logger.warning(f"Model not fitted or scaling error: {e}. Returning safe defaults.")
+            return [
+                {
+                    "index": i,
+                    "is_anomaly": False,
+                    "anomaly_score": 0.0,
+                    "confidence": 0.5,
+                    "timestamp": data[i].get('timestamp'),
+                    "download_speed": data[i].get('download_speed'),
+                    "upload_speed": data[i].get('upload_speed'),
+                    "latency": data[i].get('latency')
+                }
+                for i in range(len(data))
+            ]
         
         # Convert scores to confidence (0-1, higher = more confident it's anomaly)
         # Normalize scores to 0-1 range

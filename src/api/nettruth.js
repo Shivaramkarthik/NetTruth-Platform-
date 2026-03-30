@@ -12,10 +12,20 @@ const get = async (path) => {
   return res.json();
 };
 
-const post = async (path, params = '') => {
-  const url = params ? `${BASE}${path}?${params}` : `${BASE}${path}`;
-  const res = await fetch(url, { method: 'POST' });
-  if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
+const post = async (path, body = {}) => {
+  const options = {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(body || {}),
+  };
+  
+  const res = await fetch(`${BASE}${path}`, options);
+  if (!res.ok) {
+    const errorData = await res.json().catch(() => ({}));
+    throw new Error(`${res.status} ${res.statusText}: ${JSON.stringify(errorData.detail || errorData)}`);
+  }
   return res.json();
 };
 
@@ -27,7 +37,7 @@ export const run_speed_test = () => post('/network/speed-test');
 // ── POST /api/v1/throttling/analyze ──────────────────────────────
 // Backend fn: analyze_throttling()
 // Returns: { throttling_detected, confidence, type, affected_services, severity, recommendation }
-export const analyze_throttling = () => post('/throttling/analyze');
+export const analyze_throttling = () => post('/throttling/analyze', {});
 
 // ── GET /api/v1/throttling/quick-check ───────────────────────────
 // Backend fn: get_quick_check()
@@ -68,4 +78,4 @@ export const get_network_logs = (limit = 10) => get(`/network/logs?limit=${limit
 // Backend fn: generate_report(report_type)
 // Returns: { id, title, type, status, created_at, summary, download_url }
 export const generate_report = (report_type = 'legal') =>
-  post('/reports/generate', `report_type=${report_type}`);
+  post('/reports/generate', { report_type });

@@ -21,6 +21,7 @@ const Hero = () => {
             loop
             muted
             playsInline
+            preload="none"
             className="hero-image"
             animate={{ 
               y: [0, -15, 0],
