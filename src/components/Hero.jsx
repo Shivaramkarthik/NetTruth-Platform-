@@ -56,6 +56,32 @@ const Hero = () => {
           Uncover hidden ISP throttling. Monitor your network in real-time. Reclaim your internet speed with AI-powered diagnostics.
         </motion.p>
 
+        <motion.div
+          className="hero-actions"
+          initial={{ y: 20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ duration: 0.8, delay: 0.6 }}
+        >
+          <motion.button
+            className="hero-btn-primary"
+            onClick={() => document.getElementById('network-map')?.scrollIntoView({ behavior: 'smooth' })}
+            whileHover={{ scale: 1.04 }}
+            whileTap={{ scale: 0.97 }}
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
+              <polygon points="5 3 19 12 5 21 5 3"/>
+            </svg>
+            Start Monitoring
+          </motion.button>
+          <motion.a
+            href="#features"
+            className="hero-btn-secondary"
+            whileHover={{ scale: 1.04 }}
+            whileTap={{ scale: 0.97 }}
+          >
+            Learn More
+          </motion.a>
+        </motion.div>
 
       </div>
     </section>

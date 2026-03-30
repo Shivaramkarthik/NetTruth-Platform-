@@ -1,6 +1,7 @@
 import React from 'react';
 import './App.css';
 import Hero from './components/Hero';
+import NetworkMap from './components/NetworkMap';
 import MissionStatement from './components/MissionStatement';
 import Features from './components/Features';
 import LiveDashboard from './components/LiveDashboard';
@@ -13,6 +14,7 @@ function App() {
   return (
     <div className="app-container">
       <Hero />
+      <NetworkMap />
       <MissionStatement />
       <Features />
       <LiveDashboard />
