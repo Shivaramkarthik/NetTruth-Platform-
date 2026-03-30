@@ -130,23 +130,16 @@ app = FastAPI(
     title="NetTruth API",
     description="""
     ## AI-Powered ISP Throttling Detection Platform
-
-    NetTruth provides:
-    - 📡 Real-time network monitoring
-    - 🤖 AI-based throttling detection
-    - 📊 Smart dashboard with insights
-    - 📄 Legal report generation
-    - 🌍 Crowdsourced ISP intelligence
-    - 🔐 Privacy-first data handling
+    NetTruth provides real-time monitoring and AI analysis.
     """,
-    version=settings.APP_VERSION,
+    version="1.0.0",
     lifespan=lifespan
 )
 
 # Configure CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Configure appropriately for production
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

@@ -1,10 +1,5 @@
-/**
- * NetTruth API Service
- * Each function name mirrors the FastAPI function name in demo.py exactly.
- * Proxy: Vite forwards /api/* → http://localhost:8000
- */
-
-const BASE = import.meta.env.VITE_API_URL ? `${import.meta.env.VITE_API_URL}/api/v1` : '/api/v1';
+const API_URL = "https://nettruth-platform.onrender.com";
+const BASE = `${API_URL}/api/v1`;
 
 const get = async (path) => {
   const res = await fetch(`${BASE}${path}`);
