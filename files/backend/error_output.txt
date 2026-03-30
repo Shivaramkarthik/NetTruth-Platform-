@@ -1,0 +1,16 @@
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+    from app.main import app
+  File "C:\Users\shiva\OneDrive\Desktop\New folder\files\backend\app\main.py", line 11, in <module>
+    from app.config import settings
+  File "C:\Users\shiva\OneDrive\Desktop\New folder\files\backend\app\config.py", line 1, in <module>
+    from pydantic import BaseSettings, validator
+  File "C:\Users\shiva\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\pydantic\__init__.py", line 437, in __getattr__
+    return _getattr_migration(attr_name)
+  File "C:\Users\shiva\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\pydantic\_migration.py", line 304, in wrapper
+    raise PydanticImportError(
+    ...<3 lines>...
+    )
+pydantic.errors.PydanticImportError: `BaseSettings` has been moved to the `pydantic-settings` package. See https://docs.pydantic.dev/2.12/migration/#basesettings-has-moved-to-pydantic-settings for more details.
+
+For further information visit https://errors.pydantic.dev/2.12/u/import-error

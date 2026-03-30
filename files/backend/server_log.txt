@@ -1,0 +1,596 @@
+C:\Users\shiva\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\pydantic\_internal\_config.py:383: UserWarning: Valid config keys have changed in V2:
+* 'orm_mode' has been renamed to 'from_attributes'
+  warnings.warn(message, UserWarning)
+2026-03-31 01:30:45.834 | WARNING  | app.services.network_monitor:<module>:22 - ping3 not available. Using simulated ping.
+2026-03-31 01:30:46.335 | WARNING  | app.services.network_monitor:__init__:37 - Could not initialize speedtest: HTTP Error 403: Forbidden
+C:\Users\shiva\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\pydantic\_internal\_config.py:383: UserWarning: Valid config keys have changed in V2:
+* 'orm_mode' has been renamed to 'from_attributes'
+  warnings.warn(message, UserWarning)
+2026-03-31 01:30:48.683 | INFO     | app.ml.anomaly_detector:_create_new_model:84 - Created new anomaly detection model
+2026-03-31 01:30:48.684 | INFO     | app.ml.throttling_classifier:_create_new_model:128 - Created new throttling classifier
+2026-03-31 01:30:48.685 | INFO     | app.ml.time_series_analyzer:_create_new_model:134 - Created new LSTM model
+2026-03-31 01:30:48.685 | INFO     | app.ml.prediction_engine:__init__:23 - Prediction engine initialized with all models
+C:\Users\shiva\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\pydantic\_internal\_config.py:383: UserWarning: Valid config keys have changed in V2:
+* 'orm_mode' has been renamed to 'from_attributes'
+  warnings.warn(message, UserWarning)
+2026-03-31 01:30:48.694 | INFO     | app.ml.anomaly_detector:_create_new_model:84 - Created new anomaly detection model
+2026-03-31 01:30:48.695 | INFO     | app.ml.throttling_classifier:_create_new_model:128 - Created new throttling classifier
+2026-03-31 01:30:48.696 | INFO     | app.ml.time_series_analyzer:_create_new_model:134 - Created new LSTM model
+2026-03-31 01:30:48.696 | INFO     | app.ml.prediction_engine:__init__:23 - Prediction engine initialized with all models
+C:\Users\shiva\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\pydantic\_internal\_config.py:383: UserWarning: Valid config keys have changed in V2:
+* 'orm_mode' has been renamed to 'from_attributes'
+  warnings.warn(message, UserWarning)
+INFO:     Started server process [21232]
+INFO:     Waiting for application startup.
+2026-03-31 01:30:48 | INFO     | app.main:lifespan:118 - Starting NetTruth Platform...
+2026-03-31 01:30:48,740 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-03-31 01:30:48,740 INFO sqlalchemy.engine.Engine PRAGMA main.table_info("users")
+2026-03-31 01:30:48,740 INFO sqlalchemy.engine.Engine [raw sql] ()
+2026-03-31 01:30:48,741 INFO sqlalchemy.engine.Engine PRAGMA main.table_info("network_logs")
+2026-03-31 01:30:48,741 INFO sqlalchemy.engine.Engine [raw sql] ()
+2026-03-31 01:30:48,742 INFO sqlalchemy.engine.Engine PRAGMA main.table_info("throttling_events")
+2026-03-31 01:30:48,742 INFO sqlalchemy.engine.Engine [raw sql] ()
+2026-03-31 01:30:48,742 INFO sqlalchemy.engine.Engine PRAGMA main.table_info("reports")
+2026-03-31 01:30:48,742 INFO sqlalchemy.engine.Engine [raw sql] ()
+2026-03-31 01:30:48,743 INFO sqlalchemy.engine.Engine PRAGMA main.table_info("crowdsource_data")
+2026-03-31 01:30:48,743 INFO sqlalchemy.engine.Engine [raw sql] ()
+2026-03-31 01:30:48,743 INFO sqlalchemy.engine.Engine PRAGMA main.table_info("isp_rankings")
+2026-03-31 01:30:48,743 INFO sqlalchemy.engine.Engine [raw sql] ()
+2026-03-31 01:30:48,744 INFO sqlalchemy.engine.Engine COMMIT
+2026-03-31 01:30:48 | INFO     | app.main:lifespan:122 - Database initialized
+2026-03-31 01:30:48,745 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-03-31 01:30:48,754 INFO sqlalchemy.engine.Engine SELECT count(isp_rankings.id) AS count_1 
+FROM isp_rankings
+2026-03-31 01:30:48,754 INFO sqlalchemy.engine.Engine [generated in 0.00016s] ()
+2026-03-31 01:30:48,757 INFO sqlalchemy.engine.Engine SELECT users.id, users.uuid, users.email, users.hashed_password, users.full_name, users.isp_name, users.promised_download_speed, users.promised_upload_speed, users.plan_name, users.geohash, users.city, users.country, users.is_active, users.is_verified, users.created_at, users.updated_at, users.last_login, users.share_anonymous_data 
+FROM users 
+WHERE users.email = ?
+2026-03-31 01:30:48,757 INFO sqlalchemy.engine.Engine [generated in 0.00021s] ('demo@nettruth.ai',)
+2026-03-31 01:30:48,759 INFO sqlalchemy.engine.Engine SELECT count(network_logs.id) AS count_1 
+FROM network_logs 
+WHERE network_logs.user_id = ?
+2026-03-31 01:30:48,759 INFO sqlalchemy.engine.Engine [generated in 0.00013s] (1,)
+2026-03-31 01:30:48,760 INFO sqlalchemy.engine.Engine ROLLBACK
+2026-03-31 01:30:48 | INFO     | app.services.scheduler:start_scheduler:63 - Background scheduler started with jobs:
+2026-03-31 01:30:48 | INFO     | app.services.scheduler:start_scheduler:65 -   - Latency Check (ID: latency_check)
+2026-03-31 01:30:48 | INFO     | app.services.scheduler:start_scheduler:65 -   - Automatic Speed Test (ID: automatic_speed_test)
+2026-03-31 01:30:48 | INFO     | app.services.scheduler:start_scheduler:65 -   - Throttling Analysis (ID: throttling_analysis)
+2026-03-31 01:30:48 | INFO     | app.services.scheduler:start_scheduler:65 -   - Crowdsource Data Aggregation (ID: crowdsource_aggregation)
+2026-03-31 01:30:48 | INFO     | app.services.scheduler:start_scheduler:65 -   - ISP Rankings Update (ID: isp_rankings)
+2026-03-31 01:30:48 | INFO     | app.main:lifespan:129 - Background scheduler started
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+2026-03-31 01:31:48 | DEBUG    | app.services.scheduler:run_latency_check:99 - Running latency check job
+2026-03-31 01:31:48 | INFO     | app.services.scheduler:run_latency_check:106 - Latency check completed at 2026-03-30 20:01:48.768508
+2026-03-31 01:31:51,085 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-03-31 01:31:51,086 INFO sqlalchemy.engine.Engine SELECT users.id, users.uuid, users.email, users.hashed_password, users.full_name, users.isp_name, users.promised_download_speed, users.promised_upload_speed, users.plan_name, users.geohash, users.city, users.country, users.is_active, users.is_verified, users.created_at, users.updated_at, users.last_login, users.share_anonymous_data 
+FROM users 
+WHERE users.email = ?
+2026-03-31 01:31:51,086 INFO sqlalchemy.engine.Engine [cached since 62.33s ago] ('demo@nettruth.ai',)
+2026-03-31 01:31:51,088 INFO sqlalchemy.engine.Engine SELECT network_logs.id, network_logs.user_id, network_logs.download_speed, network_logs.upload_speed, network_logs.ping, network_logs.jitter, network_logs.packet_loss, network_logs.test_server, network_logs.server_location, network_logs.isp_name, network_logs.external_ip, network_logs.promised_download, network_logs.promised_upload, network_logs.download_ratio, network_logs.upload_ratio, network_logs.test_type, network_logs.target_service, network_logs.extra_data, network_logs.timestamp 
+FROM network_logs 
+WHERE network_logs.user_id = ? ORDER BY network_logs.timestamp DESC
+ LIMIT ? OFFSET ?
+2026-03-31 01:31:51,088 INFO sqlalchemy.engine.Engine [generated in 0.00013s] (1, 1, 0)
+2026-03-31 01:31:51,090 INFO sqlalchemy.engine.Engine SELECT avg(network_logs.download_speed) AS avg_download, avg(network_logs.upload_speed) AS avg_upload, avg(network_logs.ping) AS avg_latency 
+FROM network_logs 
+WHERE network_logs.user_id = ? AND network_logs.timestamp >= ?
+2026-03-31 01:31:51,090 INFO sqlalchemy.engine.Engine [generated in 0.00013s] (1, '2026-03-29 20:01:51.087090')
+2026-03-31 01:31:51,092 INFO sqlalchemy.engine.Engine SELECT count(throttling_events.id) AS count_1 
+FROM throttling_events 
+WHERE throttling_events.user_id = ? AND throttling_events.detected_at >= ?
+2026-03-31 01:31:51,092 INFO sqlalchemy.engine.Engine [generated in 0.00011s] (1, '2026-03-29 20:01:51.087090')
+2026-03-31 01:31:51,093 INFO sqlalchemy.engine.Engine SELECT count(throttling_events.id) AS count_1 
+FROM throttling_events 
+WHERE throttling_events.user_id = ? AND throttling_events.detected_at >= ?
+2026-03-31 01:31:51,093 INFO sqlalchemy.engine.Engine [cached since 0.001086s ago] (1, '2026-03-23 20:01:51.087090')
+2026-03-31 01:31:51,094 INFO sqlalchemy.engine.Engine SELECT count(network_logs.id) AS count_1 
+FROM network_logs 
+WHERE network_logs.user_id = ? AND network_logs.timestamp >= ?
+2026-03-31 01:31:51,094 INFO sqlalchemy.engine.Engine [generated in 0.00008s] (1, '2026-03-23 20:01:51.087090')
+2026-03-31 01:31:51,094 INFO sqlalchemy.engine.Engine SELECT count(network_logs.id) AS count_1 
+FROM network_logs 
+WHERE network_logs.user_id = ? AND network_logs.timestamp >= ? AND network_logs.download_speed >= ?
+2026-03-31 01:31:51,094 INFO sqlalchemy.engine.Engine [generated in 0.00009s] (1, '2026-03-23 20:01:51.087090', 80.0)
+INFO:     127.0.0.1:49181 - "GET /api/v1/dashboard/summary HTTP/1.1" 200 OK
+2026-03-31 01:31:51,095 INFO sqlalchemy.engine.Engine COMMIT
+2026-03-31 01:32:48 | DEBUG    | app.services.scheduler:run_latency_check:99 - Running latency check job
+2026-03-31 01:32:48 | INFO     | app.services.scheduler:run_latency_check:106 - Latency check completed at 2026-03-30 20:02:48.767290
+2026-03-31 01:32:56,829 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-03-31 01:32:56,829 INFO sqlalchemy.engine.Engine SELECT users.id, users.uuid, users.email, users.hashed_password, users.full_name, users.isp_name, users.promised_download_speed, users.promised_upload_speed, users.plan_name, users.geohash, users.city, users.country, users.is_active, users.is_verified, users.created_at, users.updated_at, users.last_login, users.share_anonymous_data 
+FROM users 
+WHERE users.email = ?
+2026-03-31 01:32:56,829 INFO sqlalchemy.engine.Engine [cached since 128.1s ago] ('demo@nettruth.ai',)
+2026-03-31 01:32:56,830 INFO sqlalchemy.engine.Engine SELECT network_logs.id, network_logs.user_id, network_logs.download_speed, network_logs.upload_speed, network_logs.ping, network_logs.jitter, network_logs.packet_loss, network_logs.test_server, network_logs.server_location, network_logs.isp_name, network_logs.external_ip, network_logs.promised_download, network_logs.promised_upload, network_logs.download_ratio, network_logs.upload_ratio, network_logs.test_type, network_logs.target_service, network_logs.extra_data, network_logs.timestamp 
+FROM network_logs 
+WHERE network_logs.user_id = ? ORDER BY network_logs.timestamp DESC
+ LIMIT ? OFFSET ?
+2026-03-31 01:32:56,830 INFO sqlalchemy.engine.Engine [cached since 65.74s ago] (1, 1, 0)
+2026-03-31 01:32:56,832 INFO sqlalchemy.engine.Engine SELECT avg(network_logs.download_speed) AS avg_download, avg(network_logs.upload_speed) AS avg_upload, avg(network_logs.ping) AS avg_latency 
+FROM network_logs 
+WHERE network_logs.user_id = ? AND network_logs.timestamp >= ?
+2026-03-31 01:32:56,832 INFO sqlalchemy.engine.Engine [cached since 65.74s ago] (1, '2026-03-29 20:02:56.830063')
+2026-03-31 01:32:56,833 INFO sqlalchemy.engine.Engine SELECT count(throttling_events.id) AS count_1 
+FROM throttling_events 
+WHERE throttling_events.user_id = ? AND throttling_events.detected_at >= ?
+2026-03-31 01:32:56,833 INFO sqlalchemy.engine.Engine [cached since 65.74s ago] (1, '2026-03-29 20:02:56.830063')
+2026-03-31 01:32:56,833 INFO sqlalchemy.engine.Engine SELECT count(throttling_events.id) AS count_1 
+FROM throttling_events 
+WHERE throttling_events.user_id = ? AND throttling_events.detected_at >= ?
+2026-03-31 01:32:56,833 INFO sqlalchemy.engine.Engine [cached since 65.74s ago] (1, '2026-03-23 20:02:56.830063')
+2026-03-31 01:32:56,834 INFO sqlalchemy.engine.Engine SELECT count(network_logs.id) AS count_1 
+FROM network_logs 
+WHERE network_logs.user_id = ? AND network_logs.timestamp >= ?
+2026-03-31 01:32:56,834 INFO sqlalchemy.engine.Engine [cached since 65.74s ago] (1, '2026-03-23 20:02:56.830063')
+2026-03-31 01:32:56,835 INFO sqlalchemy.engine.Engine SELECT count(network_logs.id) AS count_1 
+FROM network_logs 
+WHERE network_logs.user_id = ? AND network_logs.timestamp >= ? AND network_logs.download_speed >= ?
+2026-03-31 01:32:56,835 INFO sqlalchemy.engine.Engine [cached since 65.74s ago] (1, '2026-03-23 20:02:56.830063', 80.0)
+INFO:     127.0.0.1:49189 - "GET /api/v1/dashboard/summary HTTP/1.1" 200 OK
+2026-03-31 01:32:56,835 INFO sqlalchemy.engine.Engine COMMIT
+2026-03-31 01:33:36,143 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-03-31 01:33:36,145 INFO sqlalchemy.engine.Engine SELECT isp_rankings.id, isp_rankings.isp_name, isp_rankings.scope, isp_rankings.region, isp_rankings.country, isp_rankings.overall_rank, isp_rankings.speed_rank, isp_rankings.reliability_rank, isp_rankings.value_rank, isp_rankings.overall_score, isp_rankings.speed_score, isp_rankings.reliability_score, isp_rankings.transparency_score, isp_rankings.total_users, isp_rankings.total_measurements, isp_rankings.avg_throttling_rate, isp_rankings.percentile, isp_rankings.calculated_at, isp_rankings.valid_until 
+FROM isp_rankings 
+WHERE isp_rankings.scope = ? ORDER BY isp_rankings.overall_rank
+2026-03-31 01:33:36,145 INFO sqlalchemy.engine.Engine [generated in 0.00031s] ('national',)
+INFO:     127.0.0.1:51141 - "GET /api/v1/crowdsource/isp-rankings HTTP/1.1" 200 OK
+2026-03-31 01:33:36,150 INFO sqlalchemy.engine.Engine COMMIT
+2026-03-31 01:33:36,150 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-03-31 01:33:36,151 INFO sqlalchemy.engine.Engine SELECT users.id, users.uuid, users.email, users.hashed_password, users.full_name, users.isp_name, users.promised_download_speed, users.promised_upload_speed, users.plan_name, users.geohash, users.city, users.country, users.is_active, users.is_verified, users.created_at, users.updated_at, users.last_login, users.share_anonymous_data 
+FROM users 
+WHERE users.email = ?
+2026-03-31 01:33:36,151 INFO sqlalchemy.engine.Engine [cached since 167.4s ago] ('demo@nettruth.ai',)
+2026-03-31 01:33:36,152 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-03-31 01:33:36,152 INFO sqlalchemy.engine.Engine SELECT isp_rankings.id, isp_rankings.isp_name, isp_rankings.scope, isp_rankings.region, isp_rankings.country, isp_rankings.overall_rank, isp_rankings.speed_rank, isp_rankings.reliability_rank, isp_rankings.value_rank, isp_rankings.overall_score, isp_rankings.speed_score, isp_rankings.reliability_score, isp_rankings.transparency_score, isp_rankings.total_users, isp_rankings.total_measurements, isp_rankings.avg_throttling_rate, isp_rankings.percentile, isp_rankings.calculated_at, isp_rankings.valid_until 
+FROM isp_rankings 
+WHERE isp_rankings.scope = ? ORDER BY isp_rankings.overall_rank
+2026-03-31 01:33:36,153 INFO sqlalchemy.engine.Engine [cached since 0.008023s ago] ('national',)
+INFO:     127.0.0.1:51141 - "GET /api/v1/crowdsource/isp-rankings HTTP/1.1" 200 OK
+2026-03-31 01:33:36,172 INFO sqlalchemy.engine.Engine COMMIT
+2026-03-31 01:33:36,173 INFO sqlalchemy.engine.Engine SELECT network_logs.id, network_logs.user_id, network_logs.download_speed, network_logs.upload_speed, network_logs.ping, network_logs.jitter, network_logs.packet_loss, network_logs.test_server, network_logs.server_location, network_logs.isp_name, network_logs.external_ip, network_logs.promised_download, network_logs.promised_upload, network_logs.download_ratio, network_logs.upload_ratio, network_logs.test_type, network_logs.target_service, network_logs.extra_data, network_logs.timestamp 
+FROM network_logs 
+WHERE network_logs.user_id = ? ORDER BY network_logs.timestamp DESC
+ LIMIT ? OFFSET ?
+2026-03-31 01:33:36,173 INFO sqlalchemy.engine.Engine [cached since 105.1s ago] (1, 1, 0)
+2026-03-31 01:33:36,175 INFO sqlalchemy.engine.Engine SELECT avg(network_logs.download_speed) AS avg_download, avg(network_logs.upload_speed) AS avg_upload, avg(network_logs.ping) AS avg_latency 
+FROM network_logs 
+WHERE network_logs.user_id = ? AND network_logs.timestamp >= ?
+2026-03-31 01:33:36,175 INFO sqlalchemy.engine.Engine [cached since 105.1s ago] (1, '2026-03-29 20:03:36.172856')
+2026-03-31 01:33:36,177 INFO sqlalchemy.engine.Engine SELECT count(throttling_events.id) AS count_1 
+FROM throttling_events 
+WHERE throttling_events.user_id = ? AND throttling_events.detected_at >= ?
+2026-03-31 01:33:36,177 INFO sqlalchemy.engine.Engine [cached since 105.1s ago] (1, '2026-03-29 20:03:36.172856')
+2026-03-31 01:33:36,179 INFO sqlalchemy.engine.Engine SELECT count(throttling_events.id) AS count_1 
+FROM throttling_events 
+WHERE throttling_events.user_id = ? AND throttling_events.detected_at >= ?
+2026-03-31 01:33:36,179 INFO sqlalchemy.engine.Engine [cached since 105.1s ago] (1, '2026-03-23 20:03:36.172856')
+2026-03-31 01:33:36,181 INFO sqlalchemy.engine.Engine SELECT count(network_logs.id) AS count_1 
+FROM network_logs 
+WHERE network_logs.user_id = ? AND network_logs.timestamp >= ?
+2026-03-31 01:33:36,181 INFO sqlalchemy.engine.Engine [cached since 105.1s ago] (1, '2026-03-23 20:03:36.172856')
+2026-03-31 01:33:36,184 INFO sqlalchemy.engine.Engine SELECT count(network_logs.id) AS count_1 
+FROM network_logs 
+WHERE network_logs.user_id = ? AND network_logs.timestamp >= ? AND network_logs.download_speed >= ?
+2026-03-31 01:33:36,184 INFO sqlalchemy.engine.Engine [cached since 105.1s ago] (1, '2026-03-23 20:03:36.172856', 80.0)
+INFO:     127.0.0.1:51780 - "GET /api/v1/dashboard/summary HTTP/1.1" 200 OK
+2026-03-31 01:33:36,186 INFO sqlalchemy.engine.Engine COMMIT
+2026-03-31 01:33:36,187 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-03-31 01:33:36,188 INFO sqlalchemy.engine.Engine SELECT users.id, users.uuid, users.email, users.hashed_password, users.full_name, users.isp_name, users.promised_download_speed, users.promised_upload_speed, users.plan_name, users.geohash, users.city, users.country, users.is_active, users.is_verified, users.created_at, users.updated_at, users.last_login, users.share_anonymous_data 
+FROM users 
+WHERE users.email = ?
+2026-03-31 01:33:36,188 INFO sqlalchemy.engine.Engine [cached since 167.4s ago] ('demo@nettruth.ai',)
+2026-03-31 01:33:36,189 INFO sqlalchemy.engine.Engine SELECT network_logs.id, network_logs.user_id, network_logs.download_speed, network_logs.upload_speed, network_logs.ping, network_logs.jitter, network_logs.packet_loss, network_logs.test_server, network_logs.server_location, network_logs.isp_name, network_logs.external_ip, network_logs.promised_download, network_logs.promised_upload, network_logs.download_ratio, network_logs.upload_ratio, network_logs.test_type, network_logs.target_service, network_logs.extra_data, network_logs.timestamp 
+FROM network_logs 
+WHERE network_logs.user_id = ? ORDER BY network_logs.timestamp DESC
+ LIMIT ? OFFSET ?
+2026-03-31 01:33:36,189 INFO sqlalchemy.engine.Engine [cached since 105.1s ago] (1, 1, 0)
+2026-03-31 01:33:36,191 INFO sqlalchemy.engine.Engine SELECT avg(network_logs.download_speed) AS avg_download, avg(network_logs.upload_speed) AS avg_upload, avg(network_logs.ping) AS avg_latency 
+FROM network_logs 
+WHERE network_logs.user_id = ? AND network_logs.timestamp >= ?
+2026-03-31 01:33:36,191 INFO sqlalchemy.engine.Engine [cached since 105.1s ago] (1, '2026-03-29 20:03:36.189417')
+2026-03-31 01:33:36,192 INFO sqlalchemy.engine.Engine SELECT count(throttling_events.id) AS count_1 
+FROM throttling_events 
+WHERE throttling_events.user_id = ? AND throttling_events.detected_at >= ?
+2026-03-31 01:33:36,192 INFO sqlalchemy.engine.Engine [cached since 105.1s ago] (1, '2026-03-29 20:03:36.189417')
+2026-03-31 01:33:36,193 INFO sqlalchemy.engine.Engine SELECT count(throttling_events.id) AS count_1 
+FROM throttling_events 
+WHERE throttling_events.user_id = ? AND throttling_events.detected_at >= ?
+2026-03-31 01:33:36,193 INFO sqlalchemy.engine.Engine [cached since 105.1s ago] (1, '2026-03-23 20:03:36.189417')
+2026-03-31 01:33:36,194 INFO sqlalchemy.engine.Engine SELECT count(network_logs.id) AS count_1 
+FROM network_logs 
+WHERE network_logs.user_id = ? AND network_logs.timestamp >= ?
+2026-03-31 01:33:36,195 INFO sqlalchemy.engine.Engine [cached since 105.1s ago] (1, '2026-03-23 20:03:36.189417')
+2026-03-31 01:33:36,196 INFO sqlalchemy.engine.Engine SELECT count(network_logs.id) AS count_1 
+FROM network_logs 
+WHERE network_logs.user_id = ? AND network_logs.timestamp >= ? AND network_logs.download_speed >= ?
+2026-03-31 01:33:36,196 INFO sqlalchemy.engine.Engine [cached since 105.1s ago] (1, '2026-03-23 20:03:36.189417', 80.0)
+INFO:     127.0.0.1:51780 - "GET /api/v1/dashboard/summary HTTP/1.1" 200 OK
+2026-03-31 01:33:36,198 INFO sqlalchemy.engine.Engine COMMIT
+2026-03-31 01:33:48 | DEBUG    | app.services.scheduler:run_latency_check:99 - Running latency check job
+2026-03-31 01:33:48 | INFO     | app.services.scheduler:run_latency_check:106 - Latency check completed at 2026-03-30 20:03:48.781060
+2026-03-31 01:34:48 | DEBUG    | app.services.scheduler:run_latency_check:99 - Running latency check job
+2026-03-31 01:34:48 | INFO     | app.services.scheduler:run_latency_check:106 - Latency check completed at 2026-03-30 20:04:48.773273
+INFO:     127.0.0.1:65015 - "OPTIONS /api/v1/network/speed-test HTTP/1.1" 200 OK
+2026-03-31 01:35:00,870 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-03-31 01:35:00,870 INFO sqlalchemy.engine.Engine SELECT users.id, users.uuid, users.email, users.hashed_password, users.full_name, users.isp_name, users.promised_download_speed, users.promised_upload_speed, users.plan_name, users.geohash, users.city, users.country, users.is_active, users.is_verified, users.created_at, users.updated_at, users.last_login, users.share_anonymous_data 
+FROM users 
+WHERE users.email = ?
+2026-03-31 01:35:00,870 INFO sqlalchemy.engine.Engine [cached since 252.1s ago] ('demo@nettruth.ai',)
+2026-03-31 01:35:00 | INFO     | app.services.network_monitor:run_speed_test:49 - Running speed test (target: general)
+2026-03-31 01:35:00 | INFO     | app.services.network_monitor:_run_simulated_speedtest:118 - Simulated throttling event
+2026-03-31 01:35:00,873 INFO sqlalchemy.engine.Engine INSERT INTO network_logs (user_id, download_speed, upload_speed, ping, jitter, packet_loss, test_server, server_location, isp_name, external_ip, promised_download, promised_upload, download_ratio, upload_ratio, test_type, target_service, timestamp) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-03-31 01:35:00,873 INFO sqlalchemy.engine.Engine [generated in 0.00021s] (1, 40.88, 36.57, 18.78, None, None, None, None, 'NetTruth Virtual ISP', None, 100.0, 50.0, 0.40880000000000005, 0.7314, 'manual', 'general', '2026-03-30 20:05:00.872331')
+2026-03-31 01:35:00,877 INFO sqlalchemy.engine.Engine COMMIT
+INFO:     127.0.0.1:65015 - "POST /api/v1/network/speed-test HTTP/1.1" 200 OK
+2026-03-31 01:35:11,825 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-03-31 01:35:11,825 INFO sqlalchemy.engine.Engine SELECT users.id, users.uuid, users.email, users.hashed_password, users.full_name, users.isp_name, users.promised_download_speed, users.promised_upload_speed, users.plan_name, users.geohash, users.city, users.country, users.is_active, users.is_verified, users.created_at, users.updated_at, users.last_login, users.share_anonymous_data 
+FROM users 
+WHERE users.email = ?
+2026-03-31 01:35:11,825 INFO sqlalchemy.engine.Engine [cached since 263.1s ago] ('demo@nettruth.ai',)
+2026-03-31 01:35:11 | INFO     | app.services.network_monitor:run_speed_test:49 - Running speed test (target: general)
+2026-03-31 01:35:11,827 INFO sqlalchemy.engine.Engine INSERT INTO network_logs (user_id, download_speed, upload_speed, ping, jitter, packet_loss, test_server, server_location, isp_name, external_ip, promised_download, promised_upload, download_ratio, upload_ratio, test_type, target_service, timestamp) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-03-31 01:35:11,827 INFO sqlalchemy.engine.Engine [cached since 10.95s ago] (1, 82.56, 41.79, 19.54, None, None, None, None, 'NetTruth Virtual ISP', None, 100.0, 50.0, 0.8256, 0.8358, 'manual', 'general', '2026-03-30 20:05:11.826992')
+2026-03-31 01:35:11,829 INFO sqlalchemy.engine.Engine COMMIT
+INFO:     127.0.0.1:55177 - "POST /api/v1/network/speed-test HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55177 - "OPTIONS /api/v1/throttling/analyze HTTP/1.1" 200 OK
+2026-03-31 01:35:14,078 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-03-31 01:35:14,079 INFO sqlalchemy.engine.Engine SELECT users.id, users.uuid, users.email, users.hashed_password, users.full_name, users.isp_name, users.promised_download_speed, users.promised_upload_speed, users.plan_name, users.geohash, users.city, users.country, users.is_active, users.is_verified, users.created_at, users.updated_at, users.last_login, users.share_anonymous_data 
+FROM users 
+WHERE users.email = ?
+2026-03-31 01:35:14,079 INFO sqlalchemy.engine.Engine [cached since 265.3s ago] ('demo@nettruth.ai',)
+2026-03-31 01:35:14,081 INFO sqlalchemy.engine.Engine SELECT network_logs.id, network_logs.user_id, network_logs.download_speed, network_logs.upload_speed, network_logs.ping, network_logs.jitter, network_logs.packet_loss, network_logs.test_server, network_logs.server_location, network_logs.isp_name, network_logs.external_ip, network_logs.promised_download, network_logs.promised_upload, network_logs.download_ratio, network_logs.upload_ratio, network_logs.test_type, network_logs.target_service, network_logs.extra_data, network_logs.timestamp 
+FROM network_logs 
+WHERE network_logs.user_id = ? AND network_logs.timestamp >= ? ORDER BY network_logs.timestamp
+2026-03-31 01:35:14,081 INFO sqlalchemy.engine.Engine [generated in 0.00013s] (1, '2026-03-23 20:05:14.080525')
+2026-03-31 01:35:14 | WARNING  | app.ml.anomaly_detector:detect:188 - Model not fitted or scaling error: This StandardScaler instance is not fitted yet. Call 'fit' with appropriate arguments before using this estimator.. Returning safe defaults.
+INFO:     127.0.0.1:52809 - "POST /api/v1/throttling/analyze HTTP/1.1" 200 OK
+2026-03-31 01:35:14,097 INFO sqlalchemy.engine.Engine COMMIT
+2026-03-31 01:35:17,190 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-03-31 01:35:17,191 INFO sqlalchemy.engine.Engine SELECT users.id, users.uuid, users.email, users.hashed_password, users.full_name, users.isp_name, users.promised_download_speed, users.promised_upload_speed, users.plan_name, users.geohash, users.city, users.country, users.is_active, users.is_verified, users.created_at, users.updated_at, users.last_login, users.share_anonymous_data 
+FROM users 
+WHERE users.email = ?
+2026-03-31 01:35:17,191 INFO sqlalchemy.engine.Engine [cached since 268.4s ago] ('demo@nettruth.ai',)
+2026-03-31 01:35:17,192 INFO sqlalchemy.engine.Engine SELECT network_logs.id, network_logs.user_id, network_logs.download_speed, network_logs.upload_speed, network_logs.ping, network_logs.jitter, network_logs.packet_loss, network_logs.test_server, network_logs.server_location, network_logs.isp_name, network_logs.external_ip, network_logs.promised_download, network_logs.promised_upload, network_logs.download_ratio, network_logs.upload_ratio, network_logs.test_type, network_logs.target_service, network_logs.extra_data, network_logs.timestamp 
+FROM network_logs 
+WHERE network_logs.user_id = ? ORDER BY network_logs.timestamp DESC
+ LIMIT ? OFFSET ?
+2026-03-31 01:35:17,192 INFO sqlalchemy.engine.Engine [cached since 206.1s ago] (1, 1, 0)
+2026-03-31 01:35:17,194 INFO sqlalchemy.engine.Engine SELECT avg(network_logs.download_speed) AS avg_download, avg(network_logs.upload_speed) AS avg_upload, avg(network_logs.ping) AS avg_latency 
+FROM network_logs 
+WHERE network_logs.user_id = ? AND network_logs.timestamp >= ?
+2026-03-31 01:35:17,194 INFO sqlalchemy.engine.Engine [cached since 206.1s ago] (1, '2026-03-29 20:05:17.192387')
+2026-03-31 01:35:17,195 INFO sqlalchemy.engine.Engine SELECT count(throttling_events.id) AS count_1 
+FROM throttling_events 
+WHERE throttling_events.user_id = ? AND throttling_events.detected_at >= ?
+2026-03-31 01:35:17,195 INFO sqlalchemy.engine.Engine [cached since 206.1s ago] (1, '2026-03-29 20:05:17.192387')
+2026-03-31 01:35:17,195 INFO sqlalchemy.engine.Engine SELECT count(throttling_events.id) AS count_1 
+FROM throttling_events 
+WHERE throttling_events.user_id = ? AND throttling_events.detected_at >= ?
+2026-03-31 01:35:17,195 INFO sqlalchemy.engine.Engine [cached since 206.1s ago] (1, '2026-03-23 20:05:17.192387')
+2026-03-31 01:35:17,196 INFO sqlalchemy.engine.Engine SELECT count(network_logs.id) AS count_1 
+FROM network_logs 
+WHERE network_logs.user_id = ? AND network_logs.timestamp >= ?
+2026-03-31 01:35:17,196 INFO sqlalchemy.engine.Engine [cached since 206.1s ago] (1, '2026-03-23 20:05:17.192387')
+2026-03-31 01:35:17,197 INFO sqlalchemy.engine.Engine SELECT count(network_logs.id) AS count_1 
+FROM network_logs 
+WHERE network_logs.user_id = ? AND network_logs.timestamp >= ? AND network_logs.download_speed >= ?
+2026-03-31 01:35:17,197 INFO sqlalchemy.engine.Engine [cached since 206.1s ago] (1, '2026-03-23 20:05:17.192387', 80.0)
+INFO:     127.0.0.1:52809 - "GET /api/v1/dashboard/summary HTTP/1.1" 200 OK
+2026-03-31 01:35:17,197 INFO sqlalchemy.engine.Engine COMMIT
+2026-03-31 01:35:19,243 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-03-31 01:35:19,243 INFO sqlalchemy.engine.Engine SELECT users.id, users.uuid, users.email, users.hashed_password, users.full_name, users.isp_name, users.promised_download_speed, users.promised_upload_speed, users.plan_name, users.geohash, users.city, users.country, users.is_active, users.is_verified, users.created_at, users.updated_at, users.last_login, users.share_anonymous_data 
+FROM users 
+WHERE users.email = ?
+2026-03-31 01:35:19,243 INFO sqlalchemy.engine.Engine [cached since 270.5s ago] ('demo@nettruth.ai',)
+2026-03-31 01:35:19 | INFO     | app.services.network_monitor:run_speed_test:49 - Running speed test (target: general)
+2026-03-31 01:35:19,244 INFO sqlalchemy.engine.Engine INSERT INTO network_logs (user_id, download_speed, upload_speed, ping, jitter, packet_loss, test_server, server_location, isp_name, external_ip, promised_download, promised_upload, download_ratio, upload_ratio, test_type, target_service, timestamp) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-03-31 01:35:19,244 INFO sqlalchemy.engine.Engine [cached since 18.37s ago] (1, 87.45, 39.21, 17.13, None, None, None, None, 'NetTruth Virtual ISP', None, 100.0, 50.0, 0.8745, 0.7842, 'manual', 'general', '2026-03-30 20:05:19.244532')
+2026-03-31 01:35:19,246 INFO sqlalchemy.engine.Engine COMMIT
+INFO:     127.0.0.1:52809 - "POST /api/v1/network/speed-test HTTP/1.1" 200 OK
+2026-03-31 01:35:20,114 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-03-31 01:35:20,114 INFO sqlalchemy.engine.Engine SELECT users.id, users.uuid, users.email, users.hashed_password, users.full_name, users.isp_name, users.promised_download_speed, users.promised_upload_speed, users.plan_name, users.geohash, users.city, users.country, users.is_active, users.is_verified, users.created_at, users.updated_at, users.last_login, users.share_anonymous_data 
+FROM users 
+WHERE users.email = ?
+2026-03-31 01:35:20,114 INFO sqlalchemy.engine.Engine [cached since 271.4s ago] ('demo@nettruth.ai',)
+2026-03-31 01:35:20 | INFO     | app.services.network_monitor:run_speed_test:49 - Running speed test (target: general)
+2026-03-31 01:35:20,116 INFO sqlalchemy.engine.Engine INSERT INTO network_logs (user_id, download_speed, upload_speed, ping, jitter, packet_loss, test_server, server_location, isp_name, external_ip, promised_download, promised_upload, download_ratio, upload_ratio, test_type, target_service, timestamp) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-03-31 01:35:20,116 INFO sqlalchemy.engine.Engine [cached since 19.24s ago] (1, 86.68, 41.13, 15.2, None, None, None, None, 'NetTruth Virtual ISP', None, 100.0, 50.0, 0.8668, 0.8226, 'manual', 'general', '2026-03-30 20:05:20.115958')
+2026-03-31 01:35:20,118 INFO sqlalchemy.engine.Engine COMMIT
+INFO:     127.0.0.1:52809 - "POST /api/v1/network/speed-test HTTP/1.1" 200 OK
+2026-03-31 01:35:20,289 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-03-31 01:35:20,290 INFO sqlalchemy.engine.Engine SELECT users.id, users.uuid, users.email, users.hashed_password, users.full_name, users.isp_name, users.promised_download_speed, users.promised_upload_speed, users.plan_name, users.geohash, users.city, users.country, users.is_active, users.is_verified, users.created_at, users.updated_at, users.last_login, users.share_anonymous_data 
+FROM users 
+WHERE users.email = ?
+2026-03-31 01:35:20,290 INFO sqlalchemy.engine.Engine [cached since 271.5s ago] ('demo@nettruth.ai',)
+2026-03-31 01:35:20 | INFO     | app.services.network_monitor:run_speed_test:49 - Running speed test (target: general)
+2026-03-31 01:35:20,294 INFO sqlalchemy.engine.Engine INSERT INTO network_logs (user_id, download_speed, upload_speed, ping, jitter, packet_loss, test_server, server_location, isp_name, external_ip, promised_download, promised_upload, download_ratio, upload_ratio, test_type, target_service, timestamp) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-03-31 01:35:20,294 INFO sqlalchemy.engine.Engine [cached since 19.42s ago] (1, 77.93, 39.33, 14.12, None, None, None, None, 'NetTruth Virtual ISP', None, 100.0, 50.0, 0.7793000000000001, 0.7866, 'manual', 'general', '2026-03-30 20:05:20.293941')
+2026-03-31 01:35:20,295 INFO sqlalchemy.engine.Engine COMMIT
+INFO:     127.0.0.1:52809 - "POST /api/v1/network/speed-test HTTP/1.1" 200 OK
+2026-03-31 01:35:20,470 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-03-31 01:35:20,470 INFO sqlalchemy.engine.Engine SELECT users.id, users.uuid, users.email, users.hashed_password, users.full_name, users.isp_name, users.promised_download_speed, users.promised_upload_speed, users.plan_name, users.geohash, users.city, users.country, users.is_active, users.is_verified, users.created_at, users.updated_at, users.last_login, users.share_anonymous_data 
+FROM users 
+WHERE users.email = ?
+2026-03-31 01:35:20,470 INFO sqlalchemy.engine.Engine [cached since 271.7s ago] ('demo@nettruth.ai',)
+2026-03-31 01:35:20 | INFO     | app.services.network_monitor:run_speed_test:49 - Running speed test (target: general)
+2026-03-31 01:35:20 | INFO     | app.services.network_monitor:_run_simulated_speedtest:118 - Simulated throttling event
+2026-03-31 01:35:20,472 INFO sqlalchemy.engine.Engine INSERT INTO network_logs (user_id, download_speed, upload_speed, ping, jitter, packet_loss, test_server, server_location, isp_name, external_ip, promised_download, promised_upload, download_ratio, upload_ratio, test_type, target_service, timestamp) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-03-31 01:35:20,472 INFO sqlalchemy.engine.Engine [cached since 19.6s ago] (1, 38.45, 38.58, 17.94, None, None, None, None, 'NetTruth Virtual ISP', None, 100.0, 50.0, 0.3845, 0.7716, 'manual', 'general', '2026-03-30 20:05:20.471976')
+2026-03-31 01:35:20,474 INFO sqlalchemy.engine.Engine COMMIT
+INFO:     127.0.0.1:52809 - "POST /api/v1/network/speed-test HTTP/1.1" 200 OK
+2026-03-31 01:35:20,666 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-03-31 01:35:20,666 INFO sqlalchemy.engine.Engine SELECT users.id, users.uuid, users.email, users.hashed_password, users.full_name, users.isp_name, users.promised_download_speed, users.promised_upload_speed, users.plan_name, users.geohash, users.city, users.country, users.is_active, users.is_verified, users.created_at, users.updated_at, users.last_login, users.share_anonymous_data 
+FROM users 
+WHERE users.email = ?
+2026-03-31 01:35:20,666 INFO sqlalchemy.engine.Engine [cached since 271.9s ago] ('demo@nettruth.ai',)
+2026-03-31 01:35:20 | INFO     | app.services.network_monitor:run_speed_test:49 - Running speed test (target: general)
+2026-03-31 01:35:20,668 INFO sqlalchemy.engine.Engine INSERT INTO network_logs (user_id, download_speed, upload_speed, ping, jitter, packet_loss, test_server, server_location, isp_name, external_ip, promised_download, promised_upload, download_ratio, upload_ratio, test_type, target_service, timestamp) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-03-31 01:35:20,668 INFO sqlalchemy.engine.Engine [cached since 19.79s ago] (1, 84.17, 41.87, 15.5, None, None, None, None, 'NetTruth Virtual ISP', None, 100.0, 50.0, 0.8417, 0.8373999999999999, 'manual', 'general', '2026-03-30 20:05:20.668082')
+2026-03-31 01:35:20,670 INFO sqlalchemy.engine.Engine COMMIT
+INFO:     127.0.0.1:52809 - "POST /api/v1/network/speed-test HTTP/1.1" 200 OK
+2026-03-31 01:35:20,838 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-03-31 01:35:20,838 INFO sqlalchemy.engine.Engine SELECT users.id, users.uuid, users.email, users.hashed_password, users.full_name, users.isp_name, users.promised_download_speed, users.promised_upload_speed, users.plan_name, users.geohash, users.city, users.country, users.is_active, users.is_verified, users.created_at, users.updated_at, users.last_login, users.share_anonymous_data 
+FROM users 
+WHERE users.email = ?
+2026-03-31 01:35:20,838 INFO sqlalchemy.engine.Engine [cached since 272.1s ago] ('demo@nettruth.ai',)
+2026-03-31 01:35:20 | INFO     | app.services.network_monitor:run_speed_test:49 - Running speed test (target: general)
+2026-03-31 01:35:20,841 INFO sqlalchemy.engine.Engine INSERT INTO network_logs (user_id, download_speed, upload_speed, ping, jitter, packet_loss, test_server, server_location, isp_name, external_ip, promised_download, promised_upload, download_ratio, upload_ratio, test_type, target_service, timestamp) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-03-31 01:35:20,841 INFO sqlalchemy.engine.Engine [cached since 19.97s ago] (1, 78.15, 37.58, 18.46, None, None, None, None, 'NetTruth Virtual ISP', None, 100.0, 50.0, 0.7815000000000001, 0.7515999999999999, 'manual', 'general', '2026-03-30 20:05:20.840733')
+2026-03-31 01:35:20,844 INFO sqlalchemy.engine.Engine COMMIT
+INFO:     127.0.0.1:52809 - "POST /api/v1/network/speed-test HTTP/1.1" 200 OK
+2026-03-31 01:35:21,026 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-03-31 01:35:21,026 INFO sqlalchemy.engine.Engine SELECT users.id, users.uuid, users.email, users.hashed_password, users.full_name, users.isp_name, users.promised_download_speed, users.promised_upload_speed, users.plan_name, users.geohash, users.city, users.country, users.is_active, users.is_verified, users.created_at, users.updated_at, users.last_login, users.share_anonymous_data 
+FROM users 
+WHERE users.email = ?
+2026-03-31 01:35:21,026 INFO sqlalchemy.engine.Engine [cached since 272.3s ago] ('demo@nettruth.ai',)
+2026-03-31 01:35:21 | INFO     | app.services.network_monitor:run_speed_test:49 - Running speed test (target: general)
+2026-03-31 01:35:21,028 INFO sqlalchemy.engine.Engine INSERT INTO network_logs (user_id, download_speed, upload_speed, ping, jitter, packet_loss, test_server, server_location, isp_name, external_ip, promised_download, promised_upload, download_ratio, upload_ratio, test_type, target_service, timestamp) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-03-31 01:35:21,028 INFO sqlalchemy.engine.Engine [cached since 20.16s ago] (1, 84.92, 36.08, 14.51, None, None, None, None, 'NetTruth Virtual ISP', None, 100.0, 50.0, 0.8492000000000001, 0.7216, 'manual', 'general', '2026-03-30 20:05:21.028245')
+2026-03-31 01:35:21,030 INFO sqlalchemy.engine.Engine COMMIT
+INFO:     127.0.0.1:52809 - "POST /api/v1/network/speed-test HTTP/1.1" 200 OK
+2026-03-31 01:35:21,193 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-03-31 01:35:21,193 INFO sqlalchemy.engine.Engine SELECT users.id, users.uuid, users.email, users.hashed_password, users.full_name, users.isp_name, users.promised_download_speed, users.promised_upload_speed, users.plan_name, users.geohash, users.city, users.country, users.is_active, users.is_verified, users.created_at, users.updated_at, users.last_login, users.share_anonymous_data 
+FROM users 
+WHERE users.email = ?
+2026-03-31 01:35:21,193 INFO sqlalchemy.engine.Engine [cached since 272.4s ago] ('demo@nettruth.ai',)
+2026-03-31 01:35:21 | INFO     | app.services.network_monitor:run_speed_test:49 - Running speed test (target: general)
+2026-03-31 01:35:21 | INFO     | app.services.network_monitor:_run_simulated_speedtest:118 - Simulated throttling event
+2026-03-31 01:35:21,195 INFO sqlalchemy.engine.Engine INSERT INTO network_logs (user_id, download_speed, upload_speed, ping, jitter, packet_loss, test_server, server_location, isp_name, external_ip, promised_download, promised_upload, download_ratio, upload_ratio, test_type, target_service, timestamp) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-03-31 01:35:21,195 INFO sqlalchemy.engine.Engine [cached since 20.32s ago] (1, 42.32, 35.82, 17.58, None, None, None, None, 'NetTruth Virtual ISP', None, 100.0, 50.0, 0.4232, 0.7164, 'manual', 'general', '2026-03-30 20:05:21.195417')
+2026-03-31 01:35:21,198 INFO sqlalchemy.engine.Engine COMMIT
+INFO:     127.0.0.1:52809 - "POST /api/v1/network/speed-test HTTP/1.1" 200 OK
+2026-03-31 01:35:21,385 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-03-31 01:35:21,385 INFO sqlalchemy.engine.Engine SELECT users.id, users.uuid, users.email, users.hashed_password, users.full_name, users.isp_name, users.promised_download_speed, users.promised_upload_speed, users.plan_name, users.geohash, users.city, users.country, users.is_active, users.is_verified, users.created_at, users.updated_at, users.last_login, users.share_anonymous_data 
+FROM users 
+WHERE users.email = ?
+2026-03-31 01:35:21,385 INFO sqlalchemy.engine.Engine [cached since 272.6s ago] ('demo@nettruth.ai',)
+2026-03-31 01:35:21 | INFO     | app.services.network_monitor:run_speed_test:49 - Running speed test (target: general)
+2026-03-31 01:35:21,386 INFO sqlalchemy.engine.Engine INSERT INTO network_logs (user_id, download_speed, upload_speed, ping, jitter, packet_loss, test_server, server_location, isp_name, external_ip, promised_download, promised_upload, download_ratio, upload_ratio, test_type, target_service, timestamp) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-03-31 01:35:21,386 INFO sqlalchemy.engine.Engine [cached since 20.51s ago] (1, 76.93, 35.19, 17.04, None, None, None, None, 'NetTruth Virtual ISP', None, 100.0, 50.0, 0.7693000000000001, 0.7038, 'manual', 'general', '2026-03-30 20:05:21.386298')
+2026-03-31 01:35:21,388 INFO sqlalchemy.engine.Engine COMMIT
+INFO:     127.0.0.1:52809 - "POST /api/v1/network/speed-test HTTP/1.1" 200 OK
+2026-03-31 01:35:21,544 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-03-31 01:35:21,545 INFO sqlalchemy.engine.Engine SELECT users.id, users.uuid, users.email, users.hashed_password, users.full_name, users.isp_name, users.promised_download_speed, users.promised_upload_speed, users.plan_name, users.geohash, users.city, users.country, users.is_active, users.is_verified, users.created_at, users.updated_at, users.last_login, users.share_anonymous_data 
+FROM users 
+WHERE users.email = ?
+2026-03-31 01:35:21,545 INFO sqlalchemy.engine.Engine [cached since 272.8s ago] ('demo@nettruth.ai',)
+2026-03-31 01:35:21 | INFO     | app.services.network_monitor:run_speed_test:49 - Running speed test (target: general)
+2026-03-31 01:35:21 | INFO     | app.services.network_monitor:_run_simulated_speedtest:118 - Simulated throttling event
+2026-03-31 01:35:21,546 INFO sqlalchemy.engine.Engine INSERT INTO network_logs (user_id, download_speed, upload_speed, ping, jitter, packet_loss, test_server, server_location, isp_name, external_ip, promised_download, promised_upload, download_ratio, upload_ratio, test_type, target_service, timestamp) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-03-31 01:35:21,546 INFO sqlalchemy.engine.Engine [cached since 20.67s ago] (1, 40.87, 35.01, 13.79, None, None, None, None, 'NetTruth Virtual ISP', None, 100.0, 50.0, 0.40869999999999995, 0.7001999999999999, 'manual', 'general', '2026-03-30 20:05:21.546486')
+2026-03-31 01:35:21,548 INFO sqlalchemy.engine.Engine COMMIT
+INFO:     127.0.0.1:52809 - "POST /api/v1/network/speed-test HTTP/1.1" 200 OK
+2026-03-31 01:35:21,716 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-03-31 01:35:21,717 INFO sqlalchemy.engine.Engine SELECT users.id, users.uuid, users.email, users.hashed_password, users.full_name, users.isp_name, users.promised_download_speed, users.promised_upload_speed, users.plan_name, users.geohash, users.city, users.country, users.is_active, users.is_verified, users.created_at, users.updated_at, users.last_login, users.share_anonymous_data 
+FROM users 
+WHERE users.email = ?
+2026-03-31 01:35:21,717 INFO sqlalchemy.engine.Engine [cached since 273s ago] ('demo@nettruth.ai',)
+2026-03-31 01:35:21 | INFO     | app.services.network_monitor:run_speed_test:49 - Running speed test (target: general)
+2026-03-31 01:35:21,718 INFO sqlalchemy.engine.Engine INSERT INTO network_logs (user_id, download_speed, upload_speed, ping, jitter, packet_loss, test_server, server_location, isp_name, external_ip, promised_download, promised_upload, download_ratio, upload_ratio, test_type, target_service, timestamp) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-03-31 01:35:21,718 INFO sqlalchemy.engine.Engine [cached since 20.84s ago] (1, 86.72, 39.4, 18.14, None, None, None, None, 'NetTruth Virtual ISP', None, 100.0, 50.0, 0.8672, 0.7879999999999999, 'manual', 'general', '2026-03-30 20:05:21.718187')
+2026-03-31 01:35:21,720 INFO sqlalchemy.engine.Engine COMMIT
+INFO:     127.0.0.1:52809 - "POST /api/v1/network/speed-test HTTP/1.1" 200 OK
+2026-03-31 01:35:21,910 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-03-31 01:35:21,910 INFO sqlalchemy.engine.Engine SELECT users.id, users.uuid, users.email, users.hashed_password, users.full_name, users.isp_name, users.promised_download_speed, users.promised_upload_speed, users.plan_name, users.geohash, users.city, users.country, users.is_active, users.is_verified, users.created_at, users.updated_at, users.last_login, users.share_anonymous_data 
+FROM users 
+WHERE users.email = ?
+2026-03-31 01:35:21,911 INFO sqlalchemy.engine.Engine [cached since 273.2s ago] ('demo@nettruth.ai',)
+2026-03-31 01:35:21 | INFO     | app.services.network_monitor:run_speed_test:49 - Running speed test (target: general)
+2026-03-31 01:35:21,913 INFO sqlalchemy.engine.Engine INSERT INTO network_logs (user_id, download_speed, upload_speed, ping, jitter, packet_loss, test_server, server_location, isp_name, external_ip, promised_download, promised_upload, download_ratio, upload_ratio, test_type, target_service, timestamp) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-03-31 01:35:21,913 INFO sqlalchemy.engine.Engine [cached since 21.04s ago] (1, 79.22, 38.95, 15.31, None, None, None, None, 'NetTruth Virtual ISP', None, 100.0, 50.0, 0.7922, 0.779, 'manual', 'general', '2026-03-30 20:05:21.912732')
+2026-03-31 01:35:21,915 INFO sqlalchemy.engine.Engine COMMIT
+INFO:     127.0.0.1:52809 - "POST /api/v1/network/speed-test HTTP/1.1" 200 OK
+2026-03-31 01:35:22,077 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-03-31 01:35:22,077 INFO sqlalchemy.engine.Engine SELECT users.id, users.uuid, users.email, users.hashed_password, users.full_name, users.isp_name, users.promised_download_speed, users.promised_upload_speed, users.plan_name, users.geohash, users.city, users.country, users.is_active, users.is_verified, users.created_at, users.updated_at, users.last_login, users.share_anonymous_data 
+FROM users 
+WHERE users.email = ?
+2026-03-31 01:35:22,077 INFO sqlalchemy.engine.Engine [cached since 273.3s ago] ('demo@nettruth.ai',)
+2026-03-31 01:35:22 | INFO     | app.services.network_monitor:run_speed_test:49 - Running speed test (target: general)
+2026-03-31 01:35:22,079 INFO sqlalchemy.engine.Engine INSERT INTO network_logs (user_id, download_speed, upload_speed, ping, jitter, packet_loss, test_server, server_location, isp_name, external_ip, promised_download, promised_upload, download_ratio, upload_ratio, test_type, target_service, timestamp) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-03-31 01:35:22,079 INFO sqlalchemy.engine.Engine [cached since 21.21s ago] (1, 83.59, 38.04, 19.56, None, None, None, None, 'NetTruth Virtual ISP', None, 100.0, 50.0, 0.8359000000000001, 0.7608, 'manual', 'general', '2026-03-30 20:05:22.079063')
+2026-03-31 01:35:22,080 INFO sqlalchemy.engine.Engine COMMIT
+INFO:     127.0.0.1:52809 - "POST /api/v1/network/speed-test HTTP/1.1" 200 OK
+2026-03-31 01:35:22,263 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-03-31 01:35:22,264 INFO sqlalchemy.engine.Engine SELECT users.id, users.uuid, users.email, users.hashed_password, users.full_name, users.isp_name, users.promised_download_speed, users.promised_upload_speed, users.plan_name, users.geohash, users.city, users.country, users.is_active, users.is_verified, users.created_at, users.updated_at, users.last_login, users.share_anonymous_data 
+FROM users 
+WHERE users.email = ?
+2026-03-31 01:35:22,264 INFO sqlalchemy.engine.Engine [cached since 273.5s ago] ('demo@nettruth.ai',)
+2026-03-31 01:35:22 | INFO     | app.services.network_monitor:run_speed_test:49 - Running speed test (target: general)
+2026-03-31 01:35:22,266 INFO sqlalchemy.engine.Engine INSERT INTO network_logs (user_id, download_speed, upload_speed, ping, jitter, packet_loss, test_server, server_location, isp_name, external_ip, promised_download, promised_upload, download_ratio, upload_ratio, test_type, target_service, timestamp) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-03-31 01:35:22,266 INFO sqlalchemy.engine.Engine [cached since 21.39s ago] (1, 87.61, 40.85, 15.8, None, None, None, None, 'NetTruth Virtual ISP', None, 100.0, 50.0, 0.8761, 0.8170000000000001, 'manual', 'general', '2026-03-30 20:05:22.266124')
+2026-03-31 01:35:22,269 INFO sqlalchemy.engine.Engine COMMIT
+INFO:     127.0.0.1:52809 - "POST /api/v1/network/speed-test HTTP/1.1" 200 OK
+2026-03-31 01:35:22,428 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-03-31 01:35:22,429 INFO sqlalchemy.engine.Engine SELECT users.id, users.uuid, users.email, users.hashed_password, users.full_name, users.isp_name, users.promised_download_speed, users.promised_upload_speed, users.plan_name, users.geohash, users.city, users.country, users.is_active, users.is_verified, users.created_at, users.updated_at, users.last_login, users.share_anonymous_data 
+FROM users 
+WHERE users.email = ?
+2026-03-31 01:35:22,429 INFO sqlalchemy.engine.Engine [cached since 273.7s ago] ('demo@nettruth.ai',)
+2026-03-31 01:35:22 | INFO     | app.services.network_monitor:run_speed_test:49 - Running speed test (target: general)
+2026-03-31 01:35:22,430 INFO sqlalchemy.engine.Engine INSERT INTO network_logs (user_id, download_speed, upload_speed, ping, jitter, packet_loss, test_server, server_location, isp_name, external_ip, promised_download, promised_upload, download_ratio, upload_ratio, test_type, target_service, timestamp) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-03-31 01:35:22,430 INFO sqlalchemy.engine.Engine [cached since 21.56s ago] (1, 74.79, 36.53, 18.35, None, None, None, None, 'NetTruth Virtual ISP', None, 100.0, 50.0, 0.7479, 0.7306, 'manual', 'general', '2026-03-30 20:05:22.430392')
+2026-03-31 01:35:22,432 INFO sqlalchemy.engine.Engine COMMIT
+INFO:     127.0.0.1:52809 - "POST /api/v1/network/speed-test HTTP/1.1" 200 OK
+2026-03-31 01:35:22,601 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-03-31 01:35:22,601 INFO sqlalchemy.engine.Engine SELECT users.id, users.uuid, users.email, users.hashed_password, users.full_name, users.isp_name, users.promised_download_speed, users.promised_upload_speed, users.plan_name, users.geohash, users.city, users.country, users.is_active, users.is_verified, users.created_at, users.updated_at, users.last_login, users.share_anonymous_data 
+FROM users 
+WHERE users.email = ?
+2026-03-31 01:35:22,601 INFO sqlalchemy.engine.Engine [cached since 273.8s ago] ('demo@nettruth.ai',)
+2026-03-31 01:35:22 | INFO     | app.services.network_monitor:run_speed_test:49 - Running speed test (target: general)
+2026-03-31 01:35:22,603 INFO sqlalchemy.engine.Engine INSERT INTO network_logs (user_id, download_speed, upload_speed, ping, jitter, packet_loss, test_server, server_location, isp_name, external_ip, promised_download, promised_upload, download_ratio, upload_ratio, test_type, target_service, timestamp) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-03-31 01:35:22,603 INFO sqlalchemy.engine.Engine [cached since 21.73s ago] (1, 74.24, 37.23, 14.96, None, None, None, None, 'NetTruth Virtual ISP', None, 100.0, 50.0, 0.7424, 0.7445999999999999, 'manual', 'general', '2026-03-30 20:05:22.602856')
+2026-03-31 01:35:22,605 INFO sqlalchemy.engine.Engine COMMIT
+INFO:     127.0.0.1:52809 - "POST /api/v1/network/speed-test HTTP/1.1" 200 OK
+2026-03-31 01:35:22,782 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-03-31 01:35:22,782 INFO sqlalchemy.engine.Engine SELECT users.id, users.uuid, users.email, users.hashed_password, users.full_name, users.isp_name, users.promised_download_speed, users.promised_upload_speed, users.plan_name, users.geohash, users.city, users.country, users.is_active, users.is_verified, users.created_at, users.updated_at, users.last_login, users.share_anonymous_data 
+FROM users 
+WHERE users.email = ?
+2026-03-31 01:35:22,782 INFO sqlalchemy.engine.Engine [cached since 274s ago] ('demo@nettruth.ai',)
+2026-03-31 01:35:22 | INFO     | app.services.network_monitor:run_speed_test:49 - Running speed test (target: general)
+2026-03-31 01:35:22,783 INFO sqlalchemy.engine.Engine INSERT INTO network_logs (user_id, download_speed, upload_speed, ping, jitter, packet_loss, test_server, server_location, isp_name, external_ip, promised_download, promised_upload, download_ratio, upload_ratio, test_type, target_service, timestamp) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-03-31 01:35:22,783 INFO sqlalchemy.engine.Engine [cached since 21.91s ago] (1, 77.77, 38.52, 19.42, None, None, None, None, 'NetTruth Virtual ISP', None, 100.0, 50.0, 0.7777, 0.7704000000000001, 'manual', 'general', '2026-03-30 20:05:22.783627')
+2026-03-31 01:35:22,785 INFO sqlalchemy.engine.Engine COMMIT
+INFO:     127.0.0.1:52809 - "POST /api/v1/network/speed-test HTTP/1.1" 200 OK
+2026-03-31 01:35:22,970 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-03-31 01:35:22,970 INFO sqlalchemy.engine.Engine SELECT users.id, users.uuid, users.email, users.hashed_password, users.full_name, users.isp_name, users.promised_download_speed, users.promised_upload_speed, users.plan_name, users.geohash, users.city, users.country, users.is_active, users.is_verified, users.created_at, users.updated_at, users.last_login, users.share_anonymous_data 
+FROM users 
+WHERE users.email = ?
+2026-03-31 01:35:22,970 INFO sqlalchemy.engine.Engine [cached since 274.2s ago] ('demo@nettruth.ai',)
+2026-03-31 01:35:22 | INFO     | app.services.network_monitor:run_speed_test:49 - Running speed test (target: general)
+2026-03-31 01:35:22,971 INFO sqlalchemy.engine.Engine INSERT INTO network_logs (user_id, download_speed, upload_speed, ping, jitter, packet_loss, test_server, server_location, isp_name, external_ip, promised_download, promised_upload, download_ratio, upload_ratio, test_type, target_service, timestamp) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-03-31 01:35:22,971 INFO sqlalchemy.engine.Engine [cached since 22.1s ago] (1, 78.77, 38.17, 17.41, None, None, None, None, 'NetTruth Virtual ISP', None, 100.0, 50.0, 0.7877, 0.7634000000000001, 'manual', 'general', '2026-03-30 20:05:22.971240')
+2026-03-31 01:35:22,974 INFO sqlalchemy.engine.Engine COMMIT
+INFO:     127.0.0.1:52809 - "POST /api/v1/network/speed-test HTTP/1.1" 200 OK
+2026-03-31 01:35:23,145 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-03-31 01:35:23,145 INFO sqlalchemy.engine.Engine SELECT users.id, users.uuid, users.email, users.hashed_password, users.full_name, users.isp_name, users.promised_download_speed, users.promised_upload_speed, users.plan_name, users.geohash, users.city, users.country, users.is_active, users.is_verified, users.created_at, users.updated_at, users.last_login, users.share_anonymous_data 
+FROM users 
+WHERE users.email = ?
+2026-03-31 01:35:23,145 INFO sqlalchemy.engine.Engine [cached since 274.4s ago] ('demo@nettruth.ai',)
+2026-03-31 01:35:23 | INFO     | app.services.network_monitor:run_speed_test:49 - Running speed test (target: general)
+2026-03-31 01:35:23,147 INFO sqlalchemy.engine.Engine INSERT INTO network_logs (user_id, download_speed, upload_speed, ping, jitter, packet_loss, test_server, server_location, isp_name, external_ip, promised_download, promised_upload, download_ratio, upload_ratio, test_type, target_service, timestamp) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-03-31 01:35:23,147 INFO sqlalchemy.engine.Engine [cached since 22.27s ago] (1, 83.43, 37.48, 18.08, None, None, None, None, 'NetTruth Virtual ISP', None, 100.0, 50.0, 0.8343, 0.7495999999999999, 'manual', 'general', '2026-03-30 20:05:23.147277')
+2026-03-31 01:35:23,150 INFO sqlalchemy.engine.Engine COMMIT
+INFO:     127.0.0.1:52809 - "POST /api/v1/network/speed-test HTTP/1.1" 200 OK
+2026-03-31 01:35:23,332 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-03-31 01:35:23,332 INFO sqlalchemy.engine.Engine SELECT users.id, users.uuid, users.email, users.hashed_password, users.full_name, users.isp_name, users.promised_download_speed, users.promised_upload_speed, users.plan_name, users.geohash, users.city, users.country, users.is_active, users.is_verified, users.created_at, users.updated_at, users.last_login, users.share_anonymous_data 
+FROM users 
+WHERE users.email = ?
+2026-03-31 01:35:23,332 INFO sqlalchemy.engine.Engine [cached since 274.6s ago] ('demo@nettruth.ai',)
+2026-03-31 01:35:23 | INFO     | app.services.network_monitor:run_speed_test:49 - Running speed test (target: general)
+2026-03-31 01:35:23,334 INFO sqlalchemy.engine.Engine INSERT INTO network_logs (user_id, download_speed, upload_speed, ping, jitter, packet_loss, test_server, server_location, isp_name, external_ip, promised_download, promised_upload, download_ratio, upload_ratio, test_type, target_service, timestamp) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-03-31 01:35:23,334 INFO sqlalchemy.engine.Engine [cached since 22.46s ago] (1, 83.51, 41.76, 18.69, None, None, None, None, 'NetTruth Virtual ISP', None, 100.0, 50.0, 0.8351000000000001, 0.8351999999999999, 'manual', 'general', '2026-03-30 20:05:23.334164')
+2026-03-31 01:35:23,336 INFO sqlalchemy.engine.Engine COMMIT
+INFO:     127.0.0.1:52809 - "POST /api/v1/network/speed-test HTTP/1.1" 200 OK
+2026-03-31 01:35:23,518 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-03-31 01:35:23,519 INFO sqlalchemy.engine.Engine SELECT users.id, users.uuid, users.email, users.hashed_password, users.full_name, users.isp_name, users.promised_download_speed, users.promised_upload_speed, users.plan_name, users.geohash, users.city, users.country, users.is_active, users.is_verified, users.created_at, users.updated_at, users.last_login, users.share_anonymous_data 
+FROM users 
+WHERE users.email = ?
+2026-03-31 01:35:23,519 INFO sqlalchemy.engine.Engine [cached since 274.8s ago] ('demo@nettruth.ai',)
+2026-03-31 01:35:23 | INFO     | app.services.network_monitor:run_speed_test:49 - Running speed test (target: general)
+2026-03-31 01:35:23,520 INFO sqlalchemy.engine.Engine INSERT INTO network_logs (user_id, download_speed, upload_speed, ping, jitter, packet_loss, test_server, server_location, isp_name, external_ip, promised_download, promised_upload, download_ratio, upload_ratio, test_type, target_service, timestamp) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-03-31 01:35:23,520 INFO sqlalchemy.engine.Engine [cached since 22.65s ago] (1, 86.69, 36.75, 13.8, None, None, None, None, 'NetTruth Virtual ISP', None, 100.0, 50.0, 0.8669, 0.735, 'manual', 'general', '2026-03-30 20:05:23.520216')
+2026-03-31 01:35:23,522 INFO sqlalchemy.engine.Engine COMMIT
+INFO:     127.0.0.1:52809 - "POST /api/v1/network/speed-test HTTP/1.1" 200 OK
+2026-03-31 01:35:23,741 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-03-31 01:35:23,741 INFO sqlalchemy.engine.Engine SELECT users.id, users.uuid, users.email, users.hashed_password, users.full_name, users.isp_name, users.promised_download_speed, users.promised_upload_speed, users.plan_name, users.geohash, users.city, users.country, users.is_active, users.is_verified, users.created_at, users.updated_at, users.last_login, users.share_anonymous_data 
+FROM users 
+WHERE users.email = ?
+2026-03-31 01:35:23,741 INFO sqlalchemy.engine.Engine [cached since 275s ago] ('demo@nettruth.ai',)
+2026-03-31 01:35:23 | INFO     | app.services.network_monitor:run_speed_test:49 - Running speed test (target: general)
+2026-03-31 01:35:23,743 INFO sqlalchemy.engine.Engine INSERT INTO network_logs (user_id, download_speed, upload_speed, ping, jitter, packet_loss, test_server, server_location, isp_name, external_ip, promised_download, promised_upload, download_ratio, upload_ratio, test_type, target_service, timestamp) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-03-31 01:35:23,743 INFO sqlalchemy.engine.Engine [cached since 22.87s ago] (1, 83.04, 40.09, 18.84, None, None, None, None, 'NetTruth Virtual ISP', None, 100.0, 50.0, 0.8304, 0.8018000000000001, 'manual', 'general', '2026-03-30 20:05:23.743439')
+2026-03-31 01:35:23,745 INFO sqlalchemy.engine.Engine COMMIT
+INFO:     127.0.0.1:52809 - "POST /api/v1/network/speed-test HTTP/1.1" 200 OK
+2026-03-31 01:35:25,644 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-03-31 01:35:25,644 INFO sqlalchemy.engine.Engine SELECT users.id, users.uuid, users.email, users.hashed_password, users.full_name, users.isp_name, users.promised_download_speed, users.promised_upload_speed, users.plan_name, users.geohash, users.city, users.country, users.is_active, users.is_verified, users.created_at, users.updated_at, users.last_login, users.share_anonymous_data 
+FROM users 
+WHERE users.email = ?
+2026-03-31 01:35:25,644 INFO sqlalchemy.engine.Engine [cached since 276.9s ago] ('demo@nettruth.ai',)
+2026-03-31 01:35:25,646 INFO sqlalchemy.engine.Engine SELECT network_logs.id, network_logs.user_id, network_logs.download_speed, network_logs.upload_speed, network_logs.ping, network_logs.jitter, network_logs.packet_loss, network_logs.test_server, network_logs.server_location, network_logs.isp_name, network_logs.external_ip, network_logs.promised_download, network_logs.promised_upload, network_logs.download_ratio, network_logs.upload_ratio, network_logs.test_type, network_logs.target_service, network_logs.extra_data, network_logs.timestamp 
+FROM network_logs 
+WHERE network_logs.user_id = ? ORDER BY network_logs.timestamp DESC
+ LIMIT ? OFFSET ?
+2026-03-31 01:35:25,646 INFO sqlalchemy.engine.Engine [cached since 214.6s ago] (1, 10, 0)
+2026-03-31 01:35:25 | WARNING  | app.ml.anomaly_detector:detect:188 - Model not fitted or scaling error: This StandardScaler instance is not fitted yet. Call 'fit' with appropriate arguments before using this estimator.. Returning safe defaults.
+INFO:     127.0.0.1:52809 - "GET /api/v1/throttling/quick-check HTTP/1.1" 200 OK
+2026-03-31 01:35:25,648 INFO sqlalchemy.engine.Engine COMMIT
+2026-03-31 01:35:29,444 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-03-31 01:35:29,444 INFO sqlalchemy.engine.Engine SELECT users.id, users.uuid, users.email, users.hashed_password, users.full_name, users.isp_name, users.promised_download_speed, users.promised_upload_speed, users.plan_name, users.geohash, users.city, users.country, users.is_active, users.is_verified, users.created_at, users.updated_at, users.last_login, users.share_anonymous_data 
+FROM users 
+WHERE users.email = ?
+2026-03-31 01:35:29,444 INFO sqlalchemy.engine.Engine [cached since 280.7s ago] ('demo@nettruth.ai',)
+2026-03-31 01:35:29,446 INFO sqlalchemy.engine.Engine SELECT avg(network_logs.download_speed) AS avg_download, avg(network_logs.upload_speed) AS avg_upload, avg(network_logs.ping) AS avg_latency, count(network_logs.id) AS total_tests 
+FROM network_logs 
+WHERE network_logs.user_id = ? AND network_logs.timestamp >= ?
+2026-03-31 01:35:29,446 INFO sqlalchemy.engine.Engine [generated in 0.00012s] (1, '2026-03-23 20:05:29.446029')
+2026-03-31 01:35:29,447 INFO sqlalchemy.engine.Engine SELECT count(throttling_events.id) AS count_1 
+FROM throttling_events 
+WHERE throttling_events.user_id = ? AND throttling_events.detected_at >= ?
+2026-03-31 01:35:29,447 INFO sqlalchemy.engine.Engine [cached since 218.4s ago] (1, '2026-03-23 20:05:29.446029')
+INFO:     127.0.0.1:52809 - "GET /api/v1/dashboard/isp-rating HTTP/1.1" 200 OK
+2026-03-31 01:35:29,449 INFO sqlalchemy.engine.Engine COMMIT
+INFO:     127.0.0.1:52809 - "OPTIONS /api/v1/reports/generate HTTP/1.1" 200 OK
+2026-03-31 01:35:32,593 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-03-31 01:35:32,593 INFO sqlalchemy.engine.Engine SELECT users.id, users.uuid, users.email, users.hashed_password, users.full_name, users.isp_name, users.promised_download_speed, users.promised_upload_speed, users.plan_name, users.geohash, users.city, users.country, users.is_active, users.is_verified, users.created_at, users.updated_at, users.last_login, users.share_anonymous_data 
+FROM users 
+WHERE users.email = ?
+2026-03-31 01:35:32,593 INFO sqlalchemy.engine.Engine [cached since 283.8s ago] ('demo@nettruth.ai',)
+2026-03-31 01:35:32,595 INFO sqlalchemy.engine.Engine INSERT INTO reports (user_id, report_type, title, status, period_start, period_end, isp_name, plan_name, promised_speed, throttling_summary, ai_analysis, report_content, pdf_data, pdf_filename, regulatory_body, compliance_format, created_at, generated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-03-31 01:35:32,595 INFO sqlalchemy.engine.Engine [generated in 0.00016s] (1, 'legal_complaint', 'Network Performance Report - 2026-02-28 to 2026-03-30', <ReportStatus.PENDING: 'pending'>, '2026-02-28 20:05:32.594443', '2026-03-30 20:05:32.594443', 'NetTruth Virtual ISP', None, '100.0/50.0 Mbps', None, None, None, None, None, 'TRAI', None, '2026-03-30 20:05:32.595409', None)
+2026-03-31 01:35:32,597 INFO sqlalchemy.engine.Engine COMMIT
+2026-03-31 01:35:32,601 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-03-31 01:35:32,602 INFO sqlalchemy.engine.Engine SELECT reports.id, reports.user_id, reports.report_type, reports.title, reports.status, reports.period_start, reports.period_end, reports.isp_name, reports.plan_name, reports.promised_speed, reports.summary_stats, reports.throttling_event_ids, reports.throttling_summary, reports.ai_analysis, reports.ai_recommendations, reports.report_content, reports.pdf_data, reports.pdf_filename, reports.regulatory_body, reports.compliance_format, reports.created_at, reports.generated_at 
+FROM reports 
+WHERE reports.id = ?
+2026-03-31 01:35:32,602 INFO sqlalchemy.engine.Engine [generated in 0.00012s] (15,)
+INFO:     127.0.0.1:52809 - "POST /api/v1/reports/generate HTTP/1.1" 200 OK
+2026-03-31 01:35:32,604 INFO sqlalchemy.engine.Engine COMMIT
+2026-03-31 01:35:34,941 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-03-31 01:35:34,941 INFO sqlalchemy.engine.Engine SELECT users.id, users.uuid, users.email, users.hashed_password, users.full_name, users.isp_name, users.promised_download_speed, users.promised_upload_speed, users.plan_name, users.geohash, users.city, users.country, users.is_active, users.is_verified, users.created_at, users.updated_at, users.last_login, users.share_anonymous_data 
+FROM users 
+WHERE users.email = ?
+2026-03-31 01:35:34,941 INFO sqlalchemy.engine.Engine [cached since 286.2s ago] ('demo@nettruth.ai',)
+2026-03-31 01:35:34,942 INFO sqlalchemy.engine.Engine SELECT network_logs.id, network_logs.user_id, network_logs.download_speed, network_logs.upload_speed, network_logs.ping, network_logs.jitter, network_logs.packet_loss, network_logs.test_server, network_logs.server_location, network_logs.isp_name, network_logs.external_ip, network_logs.promised_download, network_logs.promised_upload, network_logs.download_ratio, network_logs.upload_ratio, network_logs.test_type, network_logs.target_service, network_logs.extra_data, network_logs.timestamp 
+FROM network_logs 
+WHERE network_logs.user_id = ? ORDER BY network_logs.timestamp DESC
+ LIMIT ? OFFSET ?
+2026-03-31 01:35:34,943 INFO sqlalchemy.engine.Engine [cached since 223.9s ago] (1, 48, 0)
+INFO:     127.0.0.1:52809 - "GET /api/v1/throttling/predict HTTP/1.1" 200 OK
+2026-03-31 01:35:34,949 INFO sqlalchemy.engine.Engine COMMIT
+2026-03-31 01:35:39,226 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-03-31 01:35:39,226 INFO sqlalchemy.engine.Engine SELECT users.id, users.uuid, users.email, users.hashed_password, users.full_name, users.isp_name, users.promised_download_speed, users.promised_upload_speed, users.plan_name, users.geohash, users.city, users.country, users.is_active, users.is_verified, users.created_at, users.updated_at, users.last_login, users.share_anonymous_data 
+FROM users 
+WHERE users.email = ?
+2026-03-31 01:35:39,226 INFO sqlalchemy.engine.Engine [cached since 290.5s ago] ('demo@nettruth.ai',)
+2026-03-31 01:35:39,227 INFO sqlalchemy.engine.Engine SELECT network_logs.id, network_logs.user_id, network_logs.download_speed, network_logs.upload_speed, network_logs.ping, network_logs.jitter, network_logs.packet_loss, network_logs.test_server, network_logs.server_location, network_logs.isp_name, network_logs.external_ip, network_logs.promised_download, network_logs.promised_upload, network_logs.download_ratio, network_logs.upload_ratio, network_logs.test_type, network_logs.target_service, network_logs.extra_data, network_logs.timestamp 
+FROM network_logs 
+WHERE network_logs.user_id = ? ORDER BY network_logs.timestamp DESC
+ LIMIT ? OFFSET ?
+2026-03-31 01:35:39,227 INFO sqlalchemy.engine.Engine [generated in 0.00012s] (1, 8, 0)
+INFO:     127.0.0.1:52809 - "GET /api/v1/network/logs?limit=8 HTTP/1.1" 200 OK
+2026-03-31 01:35:39,229 INFO sqlalchemy.engine.Engine COMMIT
+2026-03-31 01:35:48,676 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2026-03-31 01:35:48,676 INFO sqlalchemy.engine.Engine SELECT users.id, users.uuid, users.email, users.hashed_password, users.full_name, users.isp_name, users.promised_download_speed, users.promised_upload_speed, users.plan_name, users.geohash, users.city, users.country, users.is_active, users.is_verified, users.created_at, users.updated_at, users.last_login, users.share_anonymous_data 
+FROM users 
+WHERE users.email = ?
+2026-03-31 01:35:48,676 INFO sqlalchemy.engine.Engine [cached since 299.9s ago] ('demo@nettruth.ai',)
+2026-03-31 01:35:48 | INFO     | app.services.network_monitor:run_speed_test:49 - Running speed test (target: general)
+2026-03-31 01:35:48,678 INFO sqlalchemy.engine.Engine INSERT INTO network_logs (user_id, download_speed, upload_speed, ping, jitter, packet_loss, test_server, server_location, isp_name, external_ip, promised_download, promised_upload, download_ratio, upload_ratio, test_type, target_service, timestamp) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-03-31 01:35:48,678 INFO sqlalchemy.engine.Engine [cached since 47.81s ago] (1, 82.3, 40.69, 17.9, None, None, None, None, 'NetTruth Virtual ISP', None, 100.0, 50.0, 0.823, 0.8138, 'manual', 'general', '2026-03-30 20:05:48.678244')
+2026-03-31 01:35:48,681 INFO sqlalchemy.engine.Engine COMMIT
+INFO:     127.0.0.1:62390 - "POST /api/v1/network/speed-test HTTP/1.1" 200 OK
+2026-03-31 01:35:48 | DEBUG    | app.services.scheduler:run_automatic_speed_test:83 - Running automatic speed test job
+2026-03-31 01:35:48 | INFO     | app.services.scheduler:run_automatic_speed_test:92 - Automatic speed test completed at 2026-03-30 20:05:48.771550
+2026-03-31 01:35:48 | DEBUG    | app.services.scheduler:run_latency_check:99 - Running latency check job
+2026-03-31 01:35:48 | INFO     | app.services.scheduler:run_latency_check:106 - Latency check completed at 2026-03-30 20:05:48.771700
+2026-03-31 01:36:48 | DEBUG    | app.services.scheduler:run_latency_check:99 - Running latency check job
+2026-03-31 01:36:48 | INFO     | app.services.scheduler:run_latency_check:106 - Latency check completed at 2026-03-30 20:06:48.773049
+2026-03-31 01:37:48 | DEBUG    | app.services.scheduler:run_latency_check:99 - Running latency check job
+2026-03-31 01:37:48 | INFO     | app.services.scheduler:run_latency_check:106 - Latency check completed at 2026-03-30 20:07:48.780037
+2026-03-31 01:38:48 | DEBUG    | app.services.scheduler:run_latency_check:99 - Running latency check job
+2026-03-31 01:38:48 | INFO     | app.services.scheduler:run_latency_check:106 - Latency check completed at 2026-03-30 20:08:48.779670
+2026-03-31 01:39:48 | DEBUG    | app.services.scheduler:run_latency_check:99 - Running latency check job
+2026-03-31 01:39:48 | INFO     | app.services.scheduler:run_latency_check:106 - Latency check completed at 2026-03-30 20:09:48.769233
+2026-03-31 01:40:48 | DEBUG    | app.services.scheduler:run_automatic_speed_test:83 - Running automatic speed test job
+2026-03-31 01:40:48 | INFO     | app.services.scheduler:run_automatic_speed_test:92 - Automatic speed test completed at 2026-03-30 20:10:48.766055
+2026-03-31 01:40:48 | DEBUG    | app.services.scheduler:run_latency_check:99 - Running latency check job
+2026-03-31 01:40:48 | INFO     | app.services.scheduler:run_latency_check:106 - Latency check completed at 2026-03-30 20:10:48.766456
