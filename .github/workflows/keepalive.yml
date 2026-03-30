@@ -1,0 +1,21 @@
+name: Keep Render Service Alive
+on:
+  schedule:
+    # Run every 10 minutes to prevent the free tier from spinning down (15 min timeout)
+    - cron: "*/10 * * * *"
+  workflow_dispatch: # Allow manual trigger
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Backend Health Endpoint
+        run: |
+          # Use curl to hit the backend endpoint
+          # Replace with your actual Render backend URL if needed
+          curl -sSf "${{ secrets.RENDER_BACKEND_URL }}/health" || echo "Ping failed or backend URL not set"
+          
+      - name: Ping Frontend
+        run: |
+          # Replace with your actual Render frontend URL
+          curl -sSf "${{ secrets.RENDER_FRONTEND_URL }}" || echo "Ping failed or frontend URL not set"
