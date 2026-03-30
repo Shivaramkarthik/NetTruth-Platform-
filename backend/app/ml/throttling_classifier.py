@@ -1,13 +1,26 @@
-"""Classification model for throttling type detection."""
-import numpy as np
-from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
-from sklearn.preprocessing import StandardScaler, LabelEncoder
-from sklearn.model_selection import cross_val_score
-import joblib
-from typing import List, Dict, Optional, Tuple
+from typing import List, Dict, Tuple, Optional
 from datetime import datetime
 import os
 from loguru import logger
+
+try:
+    import numpy as np
+    from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
+    from sklearn.preprocessing import StandardScaler, LabelEncoder
+    from sklearn.model_selection import cross_val_score
+    import joblib
+    SKLEARN_AVAILABLE = True
+except ImportError:
+    SKLEARN_AVAILABLE = False
+    # Mock classes to avoid NameError
+    class RandomForestClassifier: pass
+    class GradientBoostingClassifier: pass
+    class StandardScaler: pass
+    class LabelEncoder: pass
+    class np:
+        @staticmethod
+        def array(x): return x
+        ndarray = list
 
 from app.config import settings
 

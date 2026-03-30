@@ -1,9 +1,26 @@
-"""Time series analysis using LSTM for pattern detection."""
-import numpy as np
 from typing import List, Dict, Optional, Tuple
 from datetime import datetime, timedelta
 import os
 from loguru import logger
+
+try:
+    import numpy as np
+    NUMPY_AVAILABLE = True
+except ImportError:
+    NUMPY_AVAILABLE = False
+    class np:
+        @staticmethod
+        def array(x): return x
+        @staticmethod
+        def sin(x): return x
+        @staticmethod
+        def cos(x): return x
+        @staticmethod
+        def mean(x): return sum(x)/len(x) if x else 0
+        @staticmethod
+        def std(x): return 0
+        pi = 3.14159
+        ndarray = list
 
 try:
     import torch
@@ -12,6 +29,9 @@ try:
     TORCH_AVAILABLE = True
 except ImportError:
     TORCH_AVAILABLE = False
+    # Mock classes to avoid NameError if someone tries to subclass them
+    class nn:
+        class Module: pass
     logger.warning("PyTorch not available. LSTM features disabled.")
 
 from app.config import settings

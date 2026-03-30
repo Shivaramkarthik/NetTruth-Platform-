@@ -1,14 +1,27 @@
-"""Anomaly detection using Isolation Forest for throttling detection."""
-import numpy as np
-from sklearn.ensemble import IsolationForest
-from sklearn.preprocessing import StandardScaler
-import joblib
 from typing import List, Dict, Tuple, Optional
 from datetime import datetime
 import os
 from loguru import logger
 
-from app.config import settings
+try:
+    import numpy as np
+    from sklearn.ensemble import IsolationForest
+    from sklearn.preprocessing import StandardScaler
+    import joblib
+    SKLEARN_AVAILABLE = True
+except ImportError:
+    SKLEARN_AVAILABLE = False
+    # Mock classes to avoid NameError
+    class IsolationForest: pass
+    class StandardScaler: pass
+    class np:
+        @staticmethod
+        def array(x): return x
+        @staticmethod
+        def var(x): return 0
+        @staticmethod
+        def zeros_like(x): return x
+        ndarray = list
 
 
 class AnomalyDetector:

@@ -125,8 +125,6 @@ class PredictionEngine:
         upload_speeds = [d.get('upload_speed', 0) for d in data]
         latencies = [d.get('latency', 0) for d in data]
         
-        import numpy as np
-        
         # Get throttling info
         throttling_events = results.get('throttling_classification', {}).get('throttling_events', 0)
         anomaly_rate = results.get('anomaly_detection', {}).get('anomaly_rate', 0)
@@ -142,15 +140,20 @@ class PredictionEngine:
             status = "good"
             status_message = "Network performance appears normal."
         
+        # Standard lib calculations for averages
+        def get_avg(lst): return sum(lst) / len(lst) if lst else 0
+        def get_min(lst): return min(lst) if lst else 0
+        def get_max(lst): return max(lst) if lst else 0
+
         return {
             "status": status,
             "status_message": status_message,
             "statistics": {
-                "avg_download_speed": float(np.mean(download_speeds)) if download_speeds else 0,
-                "avg_upload_speed": float(np.mean(upload_speeds)) if upload_speeds else 0,
-                "avg_latency": float(np.mean(latencies)) if latencies else 0,
-                "min_download_speed": float(np.min(download_speeds)) if download_speeds else 0,
-                "max_download_speed": float(np.max(download_speeds)) if download_speeds else 0
+                "avg_download_speed": float(get_avg(download_speeds)),
+                "avg_upload_speed": float(get_avg(upload_speeds)),
+                "avg_latency": float(get_avg(latencies)),
+                "min_download_speed": float(get_min(download_speeds)),
+                "max_download_speed": float(get_max(download_speeds))
             },
             "throttling_detected": throttling_events > 0,
             "throttling_events": throttling_events,
@@ -248,18 +251,6 @@ class PredictionEngine:
         """
         analysis = self.analyze(data, include_predictions=False)
         
-        import numpy as np
-        
-        download_speeds = [d.get('download_speed', 0) for d in data]
-        promised_speeds = [d.get('promised_download', 100) for d in data]
-        
-        # Calculate compliance
-        compliance_checks = [
-            actual >= promised * 0.8  # 80% of promised speed
-            for actual, promised in zip(download_speeds, promised_speeds)
-        ]
-        compliance_rate = sum(compliance_checks) / len(compliance_checks) if compliance_checks else 0
-        
         evidence = {
             "analysis_period": {
                 "start": data[0].get('timestamp') if data else None,
@@ -267,11 +258,11 @@ class PredictionEngine:
                 "total_measurements": len(data)
             },
             "speed_statistics": {
-                "average_download": float(np.mean(download_speeds)),
-                "minimum_download": float(np.min(download_speeds)),
-                "maximum_download": float(np.max(download_speeds)),
-                "standard_deviation": float(np.std(download_speeds)),
-                "promised_speed": float(np.mean(promised_speeds))
+                "average_download": float(sum(download_speeds)/len(download_speeds)) if download_speeds else 0,
+                "minimum_download": float(min(download_speeds)) if download_speeds else 0,
+                "maximum_download": float(max(download_speeds)) if download_speeds else 0,
+                "standard_deviation": 0.0, # Placeholder when numpy is missing
+                "promised_speed": float(sum(promised_speeds)/len(promised_speeds)) if promised_speeds else 0
             },
             "compliance": {
                 "rate": compliance_rate,

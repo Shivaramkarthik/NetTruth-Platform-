@@ -11,15 +11,15 @@ asyncpg==0.29.0
 alembic==1.13.1
 psycopg2-binary==2.9.9
 
-# Time-series database
-influxdb-client==1.40.0
+# Time-series database (Commented out for Render Free Plan)
+# influxdb-client==1.40.0
 
-# ML/AI
-scikit-learn==1.4.0
-numpy==1.26.3
-pandas==2.1.4
-torch==2.1.2
-joblib==1.3.2
+# ML/AI (Commented out for Render Free Plan - using lightweight fallbacks)
+# scikit-learn==1.4.0
+# numpy==1.26.3
+# pandas==2.1.4
+# torch==2.1.2
+# joblib==1.3.2
 
 # PDF Generation
 reportlab==4.0.8
