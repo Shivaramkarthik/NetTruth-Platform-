@@ -48,7 +48,7 @@ class ReportResponse(BaseModel):
     generated_at: Optional[datetime] = None
 
     class Config:
-        from_attributes = True
+        orm_mode = True
 
 
 # Endpoints

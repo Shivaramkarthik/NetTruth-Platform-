@@ -47,7 +47,7 @@ class NetworkLogResponse(BaseModel):
     timestamp: datetime
 
     class Config:
-        from_attributes = True
+        orm_mode = True
 
 
 class NetworkStats(BaseModel):
@@ -319,5 +319,5 @@ async def analyze_new_measurement(user_id: int, log_id: int):
     Background task to analyze new measurements for throttling.
     """
     # This would trigger the ML analysis pipeline
-    # Implementation in services/throttling_detector.py
+    # Implementation in services/throttling_detector.py #open
     pass

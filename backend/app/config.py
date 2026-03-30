@@ -1,6 +1,4 @@
-"""Configuration settings for NetTruth platform."""
-from pydantic_settings import BaseSettings
-from pydantic import field_validator
+from pydantic import BaseSettings, validator
 from typing import Optional
 import os
 
@@ -17,8 +15,7 @@ class Settings(BaseSettings):
     # Database
     DATABASE_URL: str = "sqlite+aiosqlite:///./nettruth.db"
 
-    @field_validator("DATABASE_URL")
-    @classmethod
+    @validator("DATABASE_URL", pre=False, always=True)
     def assemble_db_connection(cls, v: str) -> str:
         if isinstance(v, str):
             if v.startswith("postgres://"):
