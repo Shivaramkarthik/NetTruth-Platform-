@@ -4,11 +4,11 @@ uvicorn[standard]==0.22.0
 python-multipart==0.0.6
 pydantic[email]==1.10.13
 
-# Database
-sqlalchemy==2.0.25
-asyncpg==0.29.0
-alembic==1.13.1
-psycopg2-binary==2.9.9
+# Database (Commented out for Render Free Plan)
+# sqlalchemy==2.0.25
+# asyncpg==0.29.0
+# alembic==1.13.1
+# psycopg2-binary==2.9.9
 
 # Time-series database (Commented out for Render Free Plan)
 # influxdb-client==1.40.0

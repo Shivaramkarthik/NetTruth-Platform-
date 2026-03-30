@@ -26,11 +26,21 @@ logger.add("logs/nettruth.log", rotation="10 MB", retention="7 days")
 
 
 async def seed_demo_data():
-    """Seed database with demo data if tables are empty."""
-    from app.models.crowdsource import ISPRanking
-    from app.models.network_log import NetworkLog
-    from app.models.user import User
-    from datetime import datetime, timedelta
+    """Seed database with demo data if tables are empty (skipped if DB not available)."""
+    try:
+        from app.models.crowdsource import ISPRanking
+        from app.models.network_log import NetworkLog
+        from app.models.user import User
+        from app.models.database import async_session, DB_AVAILABLE
+        from datetime import datetime, timedelta
+        
+        if not DB_AVAILABLE or async_session is None:
+            logger.warning("Database not available. Skipping demo data seeding.")
+            return
+
+    except ImportError:
+        logger.warning("Database models not available. Skipping demo data seeding.")
+        return
 
     async with async_session() as db:
         # Check if ISP rankings exist
