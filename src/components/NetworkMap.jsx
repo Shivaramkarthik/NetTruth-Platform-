@@ -136,18 +136,27 @@ const NetworkMap = () => {
            <circle cx="16" cy="16" r="7" fill="${color}" opacity="0.95"/>
            <circle cx="16" cy="16" r="13" fill="none" stroke="${color}" stroke-width="1.5" opacity="0.3"/>
          </svg>`;
-    return L.divIcon({ html: svg, className: '', iconSize: [size*2, size*2], iconAnchor: [size, size] });
+    return L.divIcon({ html: svg, className: 'custom-div-icon', iconSize: [size*2, size*2], iconAnchor: [size, size] });
   }, []);
+
+  const markerLayerGroup = useRef(null);
 
   const drawMarkers = useCallback((pos, nodeList) => {
     const map = leafletMap.current;
-    markersRef.current.forEach(m => map.removeLayer(m));
-    markersRef.current = [];
-    const um = L.marker([pos.lat, pos.lng], { icon: makeIcon(null, true) }).addTo(map);
+    if (!map) return;
+
+    if (!markerLayerGroup.current) {
+      markerLayerGroup.current = L.layerGroup().addTo(map);
+    }
+    
+    markerLayerGroup.current.clearLayers();
+
+    const um = L.marker([pos.lat, pos.lng], { icon: makeIcon(null, true) });
     um.bindTooltip('<b style="color:#DC143C">📍 Your Location</b>', { className: 'nt-tooltip' });
-    markersRef.current.push(um);
+    markerLayerGroup.current.addLayer(um);
+
     nodeList.forEach(n => {
-      const m = L.marker([n.lat, n.lng], { icon: makeIcon(n.status) }).addTo(map);
+      const m = L.marker([n.lat, n.lng], { icon: makeIcon(n.status) });
       m.bindTooltip(
         `<div class="nt-tooltip-inner"><b>${n.isp}</b><br/>
          Signal: <span style="color:${STATUS_COLOR[n.status]}">${n.strength}%</span><br/>
@@ -155,24 +164,23 @@ const NetworkMap = () => {
          ${n.throttled ? '<span style="color:#DC143C">⚠ Throttling</span>' : '<span style="color:#00ff88">✔ Clean</span>'}
          </div>`, { className: 'nt-tooltip' });
       m.on('click', () => setSelected(n));
-      markersRef.current.push(m);
+      markerLayerGroup.current.addLayer(m);
     });
   }, [makeIcon]);
 
   const doMonitor = useCallback(async (lat, lng) => {
     try {
       setScanPct(30);
-      // Fetch real ISP rankings from the backend
-      const rankings = await get_isp_rankings();
+      // Fetch rankings and summary in parallel for better speed
+      const [rankings, summaryData] = await Promise.all([
+        get_isp_rankings(),
+        get_dashboard_summary()
+      ]);
       setScanPct(60);
       
-      // Run a real-time speed test on the backend
-      const speedTestData = await run_speed_test();
-      setScanPct(90);
-
       const nodeList = generateNodesFromRankings(lat, lng, rankings);
       
-      // Inject the current user's actual speed test result into the list
+      // Use summary data if available for the main node for instant feedback
       nodeList.unshift({
         id:        9999,
         lat:       lat,
@@ -180,10 +188,10 @@ const NetworkMap = () => {
         isp:       'Current Scan Result',
         strength:  98,
         status:    'excellent',
-        ping:      speedTestData.ping || 12,
-        download:  speedTestData.download_speed || 0,
-        upload:    speedTestData.upload_speed || 0,
-        throttled: (speedTestData.download_ratio || 1) < 0.7,
+        ping:      summaryData.current_speed?.latency || 12,
+        download:  summaryData.current_speed?.download || 0,
+        upload:    summaryData.current_speed?.upload || 0,
+        throttled: summaryData.throttling_status?.active || false,
         users:     1,
         channel:   6,
         band:      '5 GHz',
@@ -191,17 +199,20 @@ const NetworkMap = () => {
       });
 
       setNodes(nodeList);
+      setScanPct(90);
+      
+      const map = leafletMap.current;
+      if (map) {
+        map.setView([lat, lng], 13, { animate: true });
+        drawMarkers({ lat, lng }, nodeList);
+      }
+      
       setMonitoring(true);
       setLoading(false);
       setScanPct(100);
-      
-      const map = leafletMap.current;
-      map.setView([lat, lng], 13, { animate: true });
-      drawMarkers({ lat, lng }, nodeList);
     } catch (err) {
       console.error("Monitoring failed", err);
       setError(`Platform Sync Failed: ${err.message}. Falling back to cached data.`);
-      // Fallback
       const fallbackNodes = generateNodesFromRankings(lat, lng, []);
       setNodes(fallbackNodes);
       setMonitoring(true);
