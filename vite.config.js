@@ -17,11 +17,14 @@ export default defineConfig({
     // Split vendor libraries into separate cached chunks
     rollupOptions: {
       output: {
-        manualChunks: {
-          'react-vendor':  ['react', 'react-dom'],
-          'motion':        ['framer-motion'],
-          'leaflet':       ['leaflet'],
-        },
+        manualChunks(id) {
+          if (id.includes('node_modules')) {
+            if (id.includes('react') || id.includes('react-dom')) return 'react-vendor';
+            if (id.includes('framer-motion')) return 'motion';
+            if (id.includes('leaflet')) return 'leaflet';
+            return 'vendor';
+          }
+        }
       },
     },
     // Enable CSS code-splitting per lazy-loaded chunk

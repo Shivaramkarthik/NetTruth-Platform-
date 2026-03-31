@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback, useRef } from 'react';
 import { motion } from 'framer-motion';
 import {
   run_speed_test,
@@ -28,16 +28,32 @@ const PanelHeader = ({ title, endpoint, live = false }) => (
   </div>
 );
 
-// ── 1. run_speed_test — POST /api/v1/network/speed-test ─────────────────────
+// Custom hook for polling
+function useInterval(callback, delay) {
+  const savedCallback = useRef();
+  useEffect(() => { savedCallback.current = callback; }, [callback]);
+  useEffect(() => {
+    function tick() { savedCallback.current(); }
+    if (delay !== null) {
+      let id = setInterval(tick, delay);
+      return () => clearInterval(id);
+    }
+  }, [delay]);
+}
+
+// ── 1. run_speed_test — POST /api/v1/speed-test ─────────────────────
 const RunSpeedTestPanel = () => {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
   const handleClick = useCallback(async () => {
-    setLoading(true); setError(null); setData(null);
-    try { setData(await run_speed_test()); }
-    catch (e) { setError(e.message); }
+    setLoading(true); setError(null);
+    try { 
+      const res = await run_speed_test(); 
+      setData(res);
+    }
+    catch (e) { setError(e.message || "Failed to stringify error"); }
     finally { setLoading(false); }
   }, []);
 
@@ -51,33 +67,38 @@ const RunSpeedTestPanel = () => {
       {data && (
         <motion.div className="speed-cards" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}>
           <div className="speed-card">
-            <div className="speed-card-val">{data.download_speed}</div>
+            <div className="speed-card-val">{data?.download_speed || 0}</div>
             <div className="speed-card-label">download_speed (Mbps)</div>
           </div>
           <div className="speed-card">
-            <div className="speed-card-val">{data.upload_speed}</div>
+            <div className="speed-card-val">{data?.upload_speed || 0}</div>
             <div className="speed-card-label">upload_speed (Mbps)</div>
           </div>
           <div className="speed-card">
-            <div className="speed-card-val">{data.latency}</div>
+            <div className="speed-card-val">{data?.latency || 0}</div>
             <div className="speed-card-label">latency (ms)</div>
           </div>
         </motion.div>
+      )}
+      {data?.server && (
+        <div style={{ fontSize: '0.7rem', color: 'var(--text-secondary)', textAlign: 'center', marginTop: '10px' }}>
+          Test Server: <strong style={{ color: 'var(--text-primary)' }}>{data.server}</strong>
+        </div>
       )}
     </div>
   );
 };
 
-// ── 2. analyze_throttling — POST /api/v1/throttling/analyze ─────────────────
+// ── 2. analyze_throttling — POST /api/v1/analyze-throttling ─────────────────
 const AnalyzeThrottlingPanel = () => {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
   const handleClick = useCallback(async () => {
-    setLoading(true); setError(null); setData(null);
+    setLoading(true); setError(null);
     try { setData(await analyze_throttling()); }
-    catch (e) { setError(e.message); }
+    catch (e) { setError(e.message || "Failed"); }
     finally { setLoading(false); }
   }, []);
 
@@ -92,37 +113,37 @@ const AnalyzeThrottlingPanel = () => {
         <motion.div className="result-box" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}>
           <div className="result-row">
             <span className="result-key">throttling_detected</span>
-            <span className={`result-val ${data.throttling_detected ? 'danger' : 'safe'}`}>
-              {String(data.throttling_detected)}
+            <span className={`result-val ${data?.throttling_detected ? 'danger' : 'safe'}`}>
+              {String(data?.throttling_detected || false)}
             </span>
           </div>
           <div className="result-row">
             <span className="result-key">type</span>
-            <span className="result-val">{data.type}</span>
+            <span className="result-val">{data?.type || "N/A"}</span>
           </div>
           <div className="result-row">
             <span className="result-key">severity</span>
-            <span className={`result-val ${data.severity === 'high' ? 'danger' : data.severity === 'medium' ? 'warn' : ''}`}>
-              {data.severity}
+            <span className={`result-val ${data?.severity === 'high' ? 'danger' : data?.severity === 'medium' ? 'warn' : ''}`}>
+              {data?.severity || "N/A"}
             </span>
           </div>
           <div className="result-row">
             <span className="result-key">affected_services</span>
             <span className="result-val" style={{ fontSize: '0.75rem' }}>
-              {data.affected_services.length ? data.affected_services.join(', ') : '—'}
+              {data?.affected_services?.length ? data.affected_services.join(', ') : '—'}
             </span>
           </div>
           <div className="result-row">
             <span className="result-key">recommendation</span>
             <span className="result-val" style={{ fontSize: '0.72rem', color: 'var(--text-secondary)', maxWidth: '55%', textAlign: 'right' }}>
-              {data.recommendation}
+              {data?.recommendation || "N/A"}
             </span>
           </div>
           <div className="conf-bar-wrap">
-            <div className="conf-bar-fill" style={{ width: `${Math.round(data.confidence * 100)}%` }} />
+            <div className="conf-bar-fill" style={{ width: `${Math.round((data?.confidence || 0) * 100)}%` }} />
           </div>
           <p style={{ fontSize: '0.65rem', color: 'var(--text-secondary)', marginTop: 4, fontFamily: 'var(--font-mono)' }}>
-            confidence: {Math.round(data.confidence * 100)}%
+            confidence: {Math.round((data?.confidence || 0) * 100)}%
           </p>
         </motion.div>
       )}
@@ -130,23 +151,27 @@ const AnalyzeThrottlingPanel = () => {
   );
 };
 
-// ── 3. get_quick_check — GET /api/v1/throttling/quick-check ─────────────────
+// ── 3. get_quick_check — GET /api/v1/quick-check ─────────────────
 const GetQuickCheckPanel = () => {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const handleClick = useCallback(async () => {
-    setLoading(true); setError(null); setData(null);
-    try { setData(await get_quick_check()); }
-    catch (e) { setError(e.message); }
+  const fetchCheck = useCallback(async () => {
+    if (loading) return; 
+    setLoading(true);
+    try { setData(await get_quick_check()); setError(null); }
+    catch (e) { setError(e.message || "Failed"); }
     finally { setLoading(false); }
-  }, []);
+  }, [loading]);
+
+  // Real-time polling
+  useInterval(() => { fetchCheck(); }, 15000); // 15s polling to avoid spamming the UI too fast
 
   return (
     <div className="dashboard-panel">
       <PanelHeader title="Quick Check" endpoint="Instant status verification" live />
-      <button className="api-btn api-btn-outline" onClick={handleClick} disabled={loading}>
+      <button className="api-btn api-btn-outline" onClick={fetchCheck} disabled={loading}>
         {loading ? <><Spinner /> Checking…</> : '🔍 Quick Check'}
       </button>
       {error && <p className="panel-error">⚠ {error}</p>}
@@ -154,12 +179,20 @@ const GetQuickCheckPanel = () => {
         <motion.div className="result-box" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}>
           <div className="result-row">
             <span className="result-key">status</span>
-            <span className={`result-val ${data.status === 'clear' ? 'safe' : 'danger'}`}>{data.status}</span>
+            <span className={`result-val ${data?.status === 'normal' ? 'safe' : 'danger'}`}>{data?.status || 'N/A'}</span>
+          </div>
+          <div className="result-row">
+            <span className="result-key">avg_speed (Mbps)</span>
+            <span className="result-val">{data?.avg_speed || 0}</span>
+          </div>
+          <div className="result-row">
+            <span className="result-key">latency_classification</span>
+            <span className={`result-val ${data?.latency_classification === 'Good' ? 'safe' : 'warn'}`}>{data?.latency_classification || 'N/A'}</span>
           </div>
           <div className="result-row">
             <span className="result-key">analysis.explanation</span>
             <span className="result-val" style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
-              {data.analysis?.explanation}
+              {data?.analysis?.explanation || "No explanation provided."}
             </span>
           </div>
         </motion.div>
@@ -174,30 +207,34 @@ const GetDashboardSummaryPanel = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const handleClick = useCallback(async () => {
-    setLoading(true); setError(null);
-    try { setData(await get_dashboard_summary()); }
-    catch (e) { setError(e.message); }
+  const fetchData = useCallback(async () => {
+    if(loading) return;
+    setLoading(true);
+    try { setData(await get_dashboard_summary()); setError(null); }
+    catch (e) { setError(e.message || "Failed"); }
     finally { setLoading(false); }
-  }, []);
+  }, [loading]);
+
+  // Poll every 10 seconds for real-time dashboard updates
+  useInterval(() => { fetchData(); }, 10000);
 
   return (
     <div className="dashboard-panel">
       <PanelHeader title="Dashboard Summary" endpoint="Current network health overview" live />
-      <button className="api-btn api-btn-outline" onClick={handleClick} disabled={loading}>
+      <button className="api-btn api-btn-outline" onClick={fetchData} disabled={loading}>
         {loading ? <><Spinner /> Loading…</> : '📊 Dashboard Summary'}
       </button>
       {error && <p className="panel-error">⚠ {error}</p>}
       {data && (
         <motion.div className="result-box" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}>
-          <div className="result-row"><span className="result-key">current_speed.download</span><span className="result-val">{data.current_speed.download} Mbps</span></div>
-          <div className="result-row"><span className="result-key">current_speed.upload</span><span className="result-val">{data.current_speed.upload} Mbps</span></div>
-          <div className="result-row"><span className="result-key">current_speed.latency</span><span className="result-val">{data.current_speed.latency} ms</span></div>
-          <div className="result-row"><span className="result-key">promised_speed</span><span className="result-val">{data.promised_speed} Mbps</span></div>
-          <div className="result-row"><span className="result-key">speed_delivery_rate</span><span className={`result-val ${data.speed_delivery_rate < 0.7 ? 'danger' : 'safe'}`}>{Math.round(data.speed_delivery_rate * 100)}%</span></div>
-          <div className="result-row"><span className="result-key">throttling_status.active</span><span className={`result-val ${data.throttling_status.active ? 'danger' : 'safe'}`}>{String(data.throttling_status.active)}</span></div>
-          {data.alerts?.length > 0 && (
-            <div className="result-row"><span className="result-key">alerts[0].message</span><span className="result-val" style={{ fontSize: '0.72rem', color: 'var(--text-secondary)' }}>{data.alerts[0].message}</span></div>
+          <div className="result-row"><span className="result-key">network_health</span><span className={`result-val ${data?.network_health === 'Good' ? 'safe' : 'danger'}`}>{data?.network_health || 'N/A'}</span></div>
+          <div className="result-row"><span className="result-key">current_speed.download</span><span className="result-val">{data?.current_speed?.download || 0} Mbps</span></div>
+          <div className="result-row"><span className="result-key">current_speed.latency</span><span className="result-val">{data?.current_speed?.latency || 0} ms</span></div>
+          <div className="result-row"><span className="result-key">promised_speed</span><span className="result-val">{data?.promised_speed || 0} Mbps</span></div>
+          <div className="result-row"><span className="result-key">speed_delivery_rate</span><span className={`result-val ${(data?.speed_delivery_rate || 0) < 0.7 ? 'danger' : 'safe'}`}>{Math.round((data?.speed_delivery_rate || 0) * 100)}%</span></div>
+          <div className="result-row"><span className="result-key">throttling_status.active</span><span className={`result-val ${data?.throttling_status?.active ? 'danger' : 'safe'}`}>{String(data?.throttling_status?.active || false)}</span></div>
+          {data?.alerts?.length > 0 && (
+            <div className="result-row"><span className="result-key">alerts[0].message</span><span className="result-val" style={{ fontSize: '0.72rem', color: 'var(--text-secondary)' }}>{data?.alerts?.[0]?.message || "N/A"}</span></div>
           )}
         </motion.div>
       )}
@@ -205,7 +242,7 @@ const GetDashboardSummaryPanel = () => {
   );
 };
 
-// ── 5. get_isp_rating — GET /api/v1/dashboard/isp-rating ────────────────────
+// ── 5. get_isp_rating — GET /api/v1/isp-rating ────────────────────
 const GetISPRatingPanel = () => {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -214,7 +251,7 @@ const GetISPRatingPanel = () => {
   const handleClick = useCallback(async () => {
     setLoading(true); setError(null);
     try { setData(await get_isp_rating()); }
-    catch (e) { setError(e.message); }
+    catch (e) { setError(e.message || "Failed"); }
     finally { setLoading(false); }
   }, []);
 
@@ -228,15 +265,15 @@ const GetISPRatingPanel = () => {
       {data && (
         <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}>
           <div className="rating-grid">
-            <div className="rating-item"><div className="rating-score">{data.overall_score}</div><div className="rating-label">overall_score</div></div>
-            <div className="rating-item"><div className="rating-score">{data.speed_score}</div><div className="rating-label">speed_score</div></div>
-            <div className="rating-item"><div className="rating-score">{data.reliability_score}</div><div className="rating-label">reliability_score</div></div>
-            <div className="rating-item"><div className="rating-score">{data.value_score}</div><div className="rating-label">value_score</div></div>
+            <div className="rating-item"><div className="rating-score">{data?.overall_score || 0}</div><div className="rating-label">overall_score</div></div>
+            <div className="rating-item"><div className="rating-score">{data?.speed_score || 0}</div><div className="rating-label">speed_score</div></div>
+            <div className="rating-item"><div className="rating-score">{data?.reliability_score || 0}</div><div className="rating-label">reliability_score</div></div>
+            <div className="rating-item"><div className="rating-score">{data?.value_score || 0}</div><div className="rating-label">value_score</div></div>
           </div>
           <div className="result-box" style={{ marginTop: '0.75rem' }}>
             <div className="result-row">
               <span className="result-key">comparison_to_area</span>
-              <span className="result-val safe">{data.comparison_to_area?.replace('_', ' ')}</span>
+              <span className="result-val safe">{data?.comparison_to_area?.replace('_', ' ') || "N/A"}</span>
             </div>
           </div>
         </motion.div>
@@ -245,7 +282,7 @@ const GetISPRatingPanel = () => {
   );
 };
 
-// ── 6. predict_throttling — GET /api/v1/throttling/predict ──────────────────
+// ── 6. predict_throttling — GET /api/v1/predict-throttling ──────────────────
 const PredictThrottlingPanel = () => {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -254,7 +291,7 @@ const PredictThrottlingPanel = () => {
   const handleClick = useCallback(async () => {
     setLoading(true); setError(null);
     try { setData(await predict_throttling()); }
-    catch (e) { setError(e.message); }
+    catch (e) { setError(e.message || "Failed"); }
     finally { setLoading(false); }
   }, []);
 
@@ -265,23 +302,18 @@ const PredictThrottlingPanel = () => {
         {loading ? <><Spinner /> Predicting…</> : '🔮 Predict Throttling'}
       </button>
       {error && <p className="panel-error">⚠ {error}</p>}
-      {data?.error && !error && (
-        <div style={{ padding: '20px', textAlign: 'center', color: 'var(--text-secondary)' }}>
-          <p>⏳ {data.error}</p>
-          <p style={{ fontSize: '0.8rem', marginTop: '10px' }}>Requires {data.required} measurements (Have {data.available})</p>
-        </div>
-      )}
+      
       {data?.predictions && !data?.error && (
         <motion.div className="predict-list" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-          {data.predictions.map((p, i) => {
+          {data?.predictions?.map((p, i) => {
             const hour = new Date(p.hour).getHours();
-            const pct  = Math.round(p.throttling_probability * 100);
+            const pct  = Math.round((p.throttling_probability || 0) * 100);
             const high = pct > 60;
             return (
               <div key={i} className={`predict-cell ${high ? 'high-risk' : ''}`}>
                 <div className="predict-hour">{String(hour).padStart(2,'0')}:00</div>
-                <div className="predict-prob" style={{ color: high ? '#ff4d4d' : '#aaa' }}>{pct}%</div>
-                <div style={{ fontSize: '0.55rem', color: 'var(--text-secondary)', marginTop: 2 }}>{p.likely_type}</div>
+                <div className="predict-prob" style={{ color: high ? '#ff4d4d' : '#fff' }}>{pct}%</div>
+                <div style={{ fontSize: '0.55rem', color: 'var(--text-secondary)', marginTop: 2 }}>{p.likely_type || ''}</div>
               </div>
             );
           })}
@@ -291,7 +323,7 @@ const PredictThrottlingPanel = () => {
   );
 };
 
-// ── 7. get_isp_rankings — GET /api/v1/crowdsource/isp-rankings ──────────────
+// ── 7. get_isp_rankings — GET /api/v1/isp-rankings ──────────────
 const GetISPRankingsPanel = () => {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -299,8 +331,8 @@ const GetISPRankingsPanel = () => {
 
   useEffect(() => {
     get_isp_rankings()
-      .then(setData)
-      .catch(e => setError(e.message))
+      .then(res => setData(res))
+      .catch(e => setError(e.message || "Failed"))
       .finally(() => setLoading(false));
   }, []);
 
@@ -309,7 +341,7 @@ const GetISPRankingsPanel = () => {
       <PanelHeader title="ISP Rankings" endpoint="Crowdsourced ISP performance data" live />
       {loading && <div className="panel-loading"><Spinner /> Loading rankings…</div>}
       {error && <p className="panel-error">⚠ {error}</p>}
-      {data && (
+      {data && data.length > 0 && (
         <motion.table className="isp-table" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
           <thead>
             <tr>
@@ -322,15 +354,15 @@ const GetISPRankingsPanel = () => {
           </thead>
           <tbody>
             {data.map((isp, i) => (
-              <motion.tr key={isp.rank} initial={{ opacity: 0, x: -16 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.07 }}>
-                <td><span className="isp-rank">#{isp.rank}</span></td>
-                <td>{isp.name}</td>
+              <motion.tr key={isp.rank || i} initial={{ opacity: 0, x: -16 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.07 }}>
+                <td><span className="isp-rank">#{isp.rank || '-'}</span></td>
+                <td>{isp.name || 'Unknown'}</td>
                 <td>
-                  {isp.avg_speed}
-                  <div className="isp-bar-track"><div className="isp-bar-fill" style={{ width: `${isp.avg_speed}%` }} /></div>
+                  {isp.avg_speed || 0}
+                  <div className="isp-bar-track"><div className="isp-bar-fill" style={{ width: `${Math.min((isp.avg_speed || 0)/20, 100)}%` }} /></div>
                 </td>
-                <td>{isp.reliability}%</td>
-                <td>{'★'.repeat(Math.round(isp.user_rating))} {isp.user_rating}</td>
+                <td>{isp.reliability || 0}%</td>
+                <td>{'★'.repeat(Math.round(isp.user_rating || 0))} {isp.user_rating || 0}</td>
               </motion.tr>
             ))}
           </tbody>
@@ -340,27 +372,31 @@ const GetISPRankingsPanel = () => {
   );
 };
 
-// ── 8. get_network_logs — GET /api/v1/network/logs ──────────────────────────
+// ── 8. get_network_logs — GET /api/v1/logs ──────────────────────────
 const GetNetworkLogsPanel = () => {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const handleClick = useCallback(async () => {
-    setLoading(true); setError(null);
-    try { setData(await get_network_logs(8)); }
-    catch (e) { setError(e.message); }
+  const fetchLogs = useCallback(async () => {
+    if (loading && !data) return; // Only block if we have no data at all
+    setLoading(!data); // Show spinner only on initial load
+    try { setData(await get_network_logs()); setError(null); }
+    catch (e) { setError(e.message || "Failed"); }
     finally { setLoading(false); }
-  }, []);
+  }, [loading, data]);
+
+  // Poll for new logs every 8 seconds
+  useInterval(() => { fetchLogs(); }, 8000);
 
   return (
     <div className="dashboard-panel dashboard-grid-full">
       <PanelHeader title="Recent Network Logs" endpoint="Audit trail of previous measurements" live />
-      <button className="api-btn api-btn-outline" style={{ maxWidth: 300 }} onClick={handleClick} disabled={loading}>
+      <button className="api-btn api-btn-outline" style={{ maxWidth: 300 }} onClick={fetchLogs} disabled={loading}>
         {loading ? <><Spinner /> Fetching…</> : '📋 Recent Network Logs'}
       </button>
       {error && <p className="panel-error">⚠ {error}</p>}
-      {data && (
+      {data && data.length > 0 && (
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
           <table className="logs-table">
             <thead>
@@ -373,14 +409,14 @@ const GetNetworkLogsPanel = () => {
               </tr>
             </thead>
             <tbody>
-              {data.map((log) => (
-                <tr key={log.id}>
-                  <td>{new Date(log.timestamp).toLocaleDateString()}</td>
-                  <td>{log.download_speed} Mbps</td>
-                  <td>{log.upload_speed} Mbps</td>
-                  <td>{log.ping} ms</td>
-                  <td style={{ color: log.download_ratio < 0.8 ? '#ff4d4d' : '#00c864' }}>
-                    {Math.round(log.download_ratio * 100)}%
+              {data.map((log, i) => (
+                <tr key={log.id || i}>
+                  <td>{log.timestamp ? new Date(log.timestamp).toLocaleTimeString() : 'N/A'}</td>
+                  <td>{log.download_speed || 0} Mbps</td>
+                  <td>{log.upload_speed || 0} Mbps</td>
+                  <td>{log.ping || 0} ms</td>
+                  <td style={{ color: (log.download_ratio || 0) < 0.8 ? '#ff4d4d' : '#00c864' }}>
+                    {Math.round((log.download_ratio || 0) * 100)}%
                   </td>
                 </tr>
               ))}
@@ -392,7 +428,7 @@ const GetNetworkLogsPanel = () => {
   );
 };
 
-// ── 9. generate_report — POST /api/v1/reports/generate ──────────────────────
+// ── 9. generate_report — POST /api/v1/generate-report ──────────────────────
 const GenerateReportPanel = () => {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -400,8 +436,8 @@ const GenerateReportPanel = () => {
 
   const handleClick = useCallback(async () => {
     setLoading(true); setError(null);
-    try { setData(await generate_report('legal')); }
-    catch (e) { setError(e.message); }
+    try { setData(await generate_report()); }
+    catch (e) { setError(e.message || "Failed"); }
     finally { setLoading(false); }
   }, []);
 
@@ -414,13 +450,13 @@ const GenerateReportPanel = () => {
       {error && <p className="panel-error">⚠ {error}</p>}
       {data && (
         <motion.div className="result-box" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}>
-          <div className="report-badge">{data.status}</div>
-          <div className="result-row"><span className="result-key">id</span><span className="result-val" style={{ fontFamily: 'var(--font-mono)', color: 'var(--primary-accent)', fontSize: '0.75rem' }}>{data.id}</span></div>
-          <div className="result-row"><span className="result-key">title</span><span className="result-val" style={{ fontSize: '0.72rem', maxWidth: '60%', textAlign: 'right' }}>{data.title}</span></div>
-          <div className="result-row"><span className="result-key">summary.total_tests</span><span className="result-val">{data.summary.total_tests}</span></div>
-          <div className="result-row"><span className="result-key">summary.throttling_events</span><span className="result-val danger">{data.summary.throttling_events}</span></div>
-          <div className="result-row"><span className="result-key">summary.avg_speed_delivery</span><span className="result-val">{data.summary.avg_speed_delivery}%</span></div>
-          <div className="result-row"><span className="result-key">summary.compliance_score</span><span className={`result-val ${data.summary.compliance_score < 0.6 ? 'danger' : 'warn'}`}>{data.summary.compliance_score}</span></div>
+          <div className="report-badge">{data?.status || 'N/A'}</div>
+          <div className="result-row"><span className="result-key">id</span><span className="result-val" style={{ fontFamily: 'var(--font-mono)', color: 'var(--primary-accent)', fontSize: '0.75rem' }}>{data?.id || 'N/A'}</span></div>
+          <div className="result-row"><span className="result-key">title</span><span className="result-val" style={{ fontSize: '0.72rem', maxWidth: '60%', textAlign: 'right' }}>{data?.title || 'N/A'}</span></div>
+          <div className="result-row"><span className="result-key">summary.total_tests</span><span className="result-val">{data?.summary?.total_tests || 0}</span></div>
+          <div className="result-row"><span className="result-key">summary.throttling_events</span><span className="result-val danger">{data?.summary?.throttling_events || 0}</span></div>
+          <div className="result-row"><span className="result-key">summary.avg_speed_delivery</span><span className="result-val">{data?.summary?.avg_speed_delivery || 0}%</span></div>
+          <div className="result-row"><span className="result-key">summary.compliance_score</span><span className={`result-val ${data?.summary?.compliance_score < 0.6 ? 'danger' : 'warn'}`}>{data?.summary?.compliance_score || 0}</span></div>
         </motion.div>
       )}
     </div>

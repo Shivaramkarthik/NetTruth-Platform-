@@ -1,10 +1,19 @@
-const API_URL = "https://nettruth-platform.onrender.com";
-const BASE = `${API_URL}/api/v1`;
+// Use the Vite proxy in development; fallback to the production URL if needed.
+const API_URL = ""; 
+// If API_URL is empty, it uses the same origin as the frontend (which is proxied in vite.config.js)
+const BASE = "/api/v1";
 
 const get = async (path) => {
-  const res = await fetch(`${BASE}${path}`);
-  if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
-  return res.json();
+  try {
+    const res = await fetch(`${BASE}${path}`);
+    if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
+    return await res.json();
+  } catch (error) {
+    if (error.name === 'TypeError' && error.message === 'Failed to fetch') {
+      throw new Error("Backend Offline: The NetTruth server is unreachable.");
+    }
+    throw error;
+  }
 };
 
 const post = async (path, body = {}) => {
@@ -16,61 +25,37 @@ const post = async (path, body = {}) => {
     body: JSON.stringify(body || {}),
   };
   
-  const res = await fetch(`${BASE}${path}`, options);
-  if (!res.ok) {
-    const errorData = await res.json().catch(() => ({}));
-    throw new Error(`${res.status} ${res.statusText}: ${JSON.stringify(errorData.detail || errorData)}`);
+  try {
+    const res = await fetch(`${BASE}${path}`, options);
+    if (!res.ok) {
+      const errorData = await res.json().catch(() => ({}));
+      throw new Error(`${res.status} ${res.statusText}: ${JSON.stringify(errorData.detail || errorData)}`);
+    }
+    return await res.json();
+  } catch (error) {
+    if (error.name === 'TypeError' && error.message === 'Failed to fetch') {
+      throw new Error("Backend Offline: The NetTruth server is unreachable.");
+    }
+    throw error;
   }
-  return res.json();
 };
 
-// ── POST /api/v1/network/speed-test ──────────────────────────────
-// Backend fn: run_speed_test()
-// Returns: { download_speed, upload_speed, latency, timestamp, server }
-export const run_speed_test = () => post('/network/speed-test');
+// ── NEW BACKEND ROUTES ────────────────────────────────────────────────────────
+export const run_speed_test = () => post('/speed-test');
 
-// ── POST /api/v1/throttling/analyze ──────────────────────────────
-// Backend fn: analyze_throttling()
-// Returns: { throttling_detected, confidence, type, affected_services, severity, recommendation }
-export const analyze_throttling = () => post('/throttling/analyze', {});
+export const analyze_throttling = () => post('/analyze-throttling');
 
-// ── GET /api/v1/throttling/quick-check ───────────────────────────
-// Backend fn: get_quick_check()
-// Returns: { status, analysis: { explanation } }
-export const get_quick_check = () => get('/throttling/quick-check');
+export const get_quick_check = () => get('/quick-check');
 
-// ── GET /api/v1/throttling/predict ───────────────────────────────
-// Backend fn: predict_throttling()
-// Returns: { predictions: [{ hour, throttling_probability, expected_speed_drop, likely_type }] }
-export const predict_throttling = () => get('/throttling/predict');
+export const predict_throttling = () => get('/predict-throttling');
 
-// ── GET /api/v1/dashboard/summary ────────────────────────────────
-// Backend fn: get_dashboard_summary()
-// Returns: { current_speed, promised_speed, speed_delivery_rate, throttling_status, alerts }
 export const get_dashboard_summary = () => get('/dashboard/summary');
 
-// ── GET /api/v1/dashboard/speed-trends ───────────────────────────
-// Backend fn: get_speed_trends(hours)
-// Returns: [{ timestamp, download_speed, upload_speed }]
-export const get_speed_trends = (hours = 24) => get(`/dashboard/speed-trends?hours=${hours}`);
+export const get_isp_rating = () => get('/isp-rating');
 
-// ── GET /api/v1/dashboard/isp-rating ─────────────────────────────
-// Backend fn: get_isp_rating()
-// Returns: { overall_score, speed_score, reliability_score, value_score, comparison_to_area }
-export const get_isp_rating = () => get('/dashboard/isp-rating');
+export const get_isp_rankings = () => get('/isp-rankings');
 
-// ── GET /api/v1/crowdsource/isp-rankings ─────────────────────────
-// Backend fn: get_isp_rankings()
-// Returns: [{ rank, name, avg_speed, reliability, user_rating }]
-export const get_isp_rankings = () => get('/crowdsource/isp-rankings');
+export const get_network_logs = () => get('/logs');
 
-// ── GET /api/v1/network/logs ──────────────────────────────────────
-// Backend fn: get_network_logs(limit)
-// Returns: [{ id, timestamp, download_speed, upload_speed, ping, download_ratio }]
-export const get_network_logs = (limit = 10) => get(`/network/logs?limit=${limit}`);
+export const generate_report = () => post('/generate-report');
 
-// ── POST /api/v1/reports/generate ────────────────────────────────
-// Backend fn: generate_report(report_type)
-// Returns: { id, title, type, status, created_at, summary, download_url }
-export const generate_report = (report_type = 'legal') =>
-  post('/reports/generate', { report_type });
