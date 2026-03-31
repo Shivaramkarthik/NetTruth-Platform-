@@ -1,34 +1,14 @@
 services:
-  # NetTruth Frontend (Vite Static Site)
-  - type: web
-    name: nettruth-frontend
-    env: static
-    buildCommand: npm install && npm run build
-    staticPublishPath: dist
-    envVars:
-      - key: VITE_API_URL
-        fromService:
-          type: web
-          name: nettruth-backend
-          envVarKey: RENDER_EXTERNAL_URL
-        # This will automatically inject the backend's URL as /api/v1
-      - key: VITE_API_URL_SUFFIX
-        value: "/api/v1" # Used if they need to map appending paths manually. But we can just use RENDER_EXTERNAL_URL/api/v1 via shell manipulation, wait Render doesn't support complex concatenations here. So I will just leave it.
-
-  # NetTruth Backend (FastAPI Web Service)
   - type: web
     name: nettruth-backend
     env: python
-    region: frankfurt # Optional, default is oregon
-    buildCommand: pip install -r backend/requirements.txt
-    startCommand: cd backend && uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port 10000
     envVars:
       - key: PYTHON_VERSION
-        value: 3.10.12 # Matches Render's modern supported Python defaults over 3.7
+        value: 3.10.12
       - key: APP_NAME
         value: NetTruth
       - key: DEBUG
         value: "false"
-      - key: DATABASE_URL
-        sync: false # User must manually define this inside Render Dashboard to point to Supabase
-      # Optional: InfluxDB & ML Paths would also go here if required in production.
