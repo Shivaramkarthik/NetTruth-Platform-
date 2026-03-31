@@ -50,88 +50,80 @@ const RunSpeedTestPanel = () => {
   
   const [displayVals, setDisplayVals] = useState({ dl: 0, ul: 0, ping: 0 });
 
-  const handleClick = useCallback(() => {
-    setIsBusy(true); 
-    setError(null);
-    setData(null);
-    setStatusMsg('Connecting...');
-    setDisplayVals({ dl: 0, ul: 0, ping: 0 });
-
-    const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-    const wsHost = window.location.host;
-    const wsUrl = `${protocol}//${wsHost}/api/v1/ws/speed-test`;
+  const runSpeedTest = async () => {
+    setIsBusy(true);
+    setStatusMsg('Preparing measurements...');
     
-    const socket = new WebSocket(wsUrl);
+    // Reset display
+    document.getElementById("download").innerText = "0";
+    document.getElementById("upload").innerText = "0";
+    document.getElementById("latency").innerText = "0";
 
-    socket.onmessage = (event) => {
-      const msg = JSON.parse(event.data);
-      
-      switch (msg.type) {
-        case 'status':
-          setStatusMsg(msg.message);
-          break;
-        case 'ping':
-          setDisplayVals(prev => ({ ...prev, ping: msg.value }));
-          break;
-        case 'progress':
-          if (msg.download !== undefined) {
-            setDisplayVals(prev => ({ ...prev, dl: msg.download }));
-          }
-          if (msg.upload !== undefined) {
-            setDisplayVals(prev => ({ ...prev, ul: msg.upload }));
-          }
-          break;
-        case 'result':
-          setData(msg.data);
-          setDisplayVals({
-            dl: msg.data.download_speed,
-            ul: msg.data.upload_speed,
-            ping: msg.data.latency
-          });
-          break;
-        case 'error':
-          setError(msg.message);
-          setIsBusy(false);
-          break;
-      }
-    };
+    try {
+      // 1. Latency Measurement (Ping)
+      setStatusMsg('Measuring latency...');
+      const t0 = performance.now();
+      await fetch('/api/v1/health', { cache: 'no-store' });
+      const pingVal = (performance.now() - t0).toFixed(2);
+      document.getElementById("latency").innerText = pingVal;
 
-    socket.onclose = () => {
+      // 2. Download Speed (Mbps) - 10MB test file
+      setStatusMsg('Measuring download speed...');
+      const dlUrl = "https://cachefly.cachefly.net/10mb.test?cb=" + Date.now();
+      const t1 = performance.now();
+      const dlResp = await fetch(dlUrl, { cache: 'no-store' });
+      const dlBlob = await dlResp.blob();
+      const t2 = performance.now();
+      const dlMbps = ((dlBlob.size * 8) / ((t2 - t1) / 1000) / (1024 * 1024)).toFixed(2);
+      document.getElementById("download").innerText = dlMbps;
+
+      // 3. Upload Speed (Mbps) - 1MB Blob
+      setStatusMsg('Measuring upload speed...');
+      const ulSize = 1024 * 1024 * 1; // 1MB
+      const ulBlob = new Blob([new Uint8Array(ulSize)]);
+      const t3 = performance.now();
+      await fetch('https://httpbin.org/post', {
+        method: 'POST',
+        body: ulBlob,
+        cache: 'no-store'
+      });
+      const t4 = performance.now();
+      const ulMbps = ((ulSize * 8) / ((t4 - t3) / 1000) / (1024 * 1024)).toFixed(2);
+      document.getElementById("upload").innerText = ulMbps;
+
+      setStatusMsg('Test successful.');
+    } catch (err) {
+      console.error(err);
+      setError("Network test failed. Please try again.");
+    } finally {
       setIsBusy(false);
-    };
+    }
+  };
 
-    socket.onerror = () => {
-      setError("WebSocket connection failed.");
-      setIsBusy(false);
-    };
-
-    return () => {
-      if (socket.readyState === WebSocket.OPEN) {
-        socket.close();
-      }
-    };
+  const handleClick = useCallback(() => {
+    runSpeedTest();
   }, []);
 
   return (
     <div className="dashboard-panel">
       <PanelHeader title="Run Speed Test" endpoint="Real-time network speed measurement" live />
-      <button className="api-btn api-btn-primary" onClick={handleClick} disabled={isBusy}>
+      <button id="run-speed-test" className="api-btn api-btn-primary" onClick={handleClick} disabled={isBusy}>
         {isBusy ? <><Spinner /> Testing…</> : '▶ Run Speed Test'}
       </button>
       {isBusy && <p className="status-message">{statusMsg}</p>}
       {error && <p className="panel-error">⚠ {error}</p>}
-      {(data || isBusy) && (
+      {(data || isBusy || (displayVals.dl === 0 && displayVals.ul === 0)) && (
         <motion.div className="speed-cards" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}>
           <div className="speed-card">
-            <div className="speed-card-val">{displayVals.dl}</div>
+            <div id="download" className="speed-card-val">{displayVals.dl}</div>
             <div className="speed-card-label">download_speed (Mbps)</div>
           </div>
           <div className="speed-card">
-            <div className="speed-card-val">{displayVals.ul}</div>
+            <div id="upload" className="speed-card-val">{displayVals.ul}</div>
             <div className="speed-card-label">upload_speed (Mbps)</div>
           </div>
           <div className="speed-card">
-            <div className="speed-card-val">{displayVals.ping}</div>
+            <div id="latency" className="speed-card-val">{displayVals.ping}</div>
             <div className="speed-card-label">latency (ms)</div>
           </div>
         </motion.div>
