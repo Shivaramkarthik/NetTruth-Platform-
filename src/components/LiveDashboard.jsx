@@ -44,43 +44,99 @@ function useInterval(callback, delay) {
 // ── 1. run_speed_test — POST /api/v1/speed-test ─────────────────────
 const RunSpeedTestPanel = () => {
   const [data, setData] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [isBusy, setIsBusy] = useState(false);
   const [error, setError] = useState(null);
+  const [statusMsg, setStatusMsg] = useState('');
+  
+  const [displayVals, setDisplayVals] = useState({ dl: 0, ul: 0, ping: 0 });
 
-  const handleClick = useCallback(async () => {
-    setLoading(true); setError(null);
-    try { 
-      const res = await run_speed_test(); 
-      setData(res);
-    }
-    catch (e) { setError(e.message || "Failed to stringify error"); }
-    finally { setLoading(false); }
+  const handleClick = useCallback(() => {
+    setIsBusy(true); 
+    setError(null);
+    setData(null);
+    setStatusMsg('Connecting...');
+    setDisplayVals({ dl: 0, ul: 0, ping: 0 });
+
+    const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+    const wsHost = window.location.host;
+    const wsUrl = `${protocol}//${wsHost}/api/v1/ws/speed-test`;
+    
+    const socket = new WebSocket(wsUrl);
+
+    socket.onmessage = (event) => {
+      const msg = JSON.parse(event.data);
+      
+      switch (msg.type) {
+        case 'status':
+          setStatusMsg(msg.message);
+          break;
+        case 'ping':
+          setDisplayVals(prev => ({ ...prev, ping: msg.value }));
+          break;
+        case 'progress':
+          if (msg.download !== undefined) {
+            setDisplayVals(prev => ({ ...prev, dl: msg.download }));
+          }
+          if (msg.upload !== undefined) {
+            setDisplayVals(prev => ({ ...prev, ul: msg.upload }));
+          }
+          break;
+        case 'result':
+          setData(msg.data);
+          setDisplayVals({
+            dl: msg.data.download_speed,
+            ul: msg.data.upload_speed,
+            ping: msg.data.latency
+          });
+          break;
+        case 'error':
+          setError(msg.message);
+          setIsBusy(false);
+          break;
+      }
+    };
+
+    socket.onclose = () => {
+      setIsBusy(false);
+    };
+
+    socket.onerror = () => {
+      setError("WebSocket connection failed.");
+      setIsBusy(false);
+    };
+
+    return () => {
+      if (socket.readyState === WebSocket.OPEN) {
+        socket.close();
+      }
+    };
   }, []);
 
   return (
     <div className="dashboard-panel">
       <PanelHeader title="Run Speed Test" endpoint="Real-time network speed measurement" live />
-      <button className="api-btn api-btn-primary" onClick={handleClick} disabled={loading}>
-        {loading ? <><Spinner /> Running…</> : '▶ Run Speed Test'}
+      <button className="api-btn api-btn-primary" onClick={handleClick} disabled={isBusy}>
+        {isBusy ? <><Spinner /> Testing…</> : '▶ Run Speed Test'}
       </button>
+      {isBusy && <p className="status-message">{statusMsg}</p>}
       {error && <p className="panel-error">⚠ {error}</p>}
-      {data && (
+      {(data || isBusy) && (
         <motion.div className="speed-cards" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}>
           <div className="speed-card">
-            <div className="speed-card-val">{data?.download_speed || 0}</div>
+            <div className="speed-card-val">{displayVals.dl}</div>
             <div className="speed-card-label">download_speed (Mbps)</div>
           </div>
           <div className="speed-card">
-            <div className="speed-card-val">{data?.upload_speed || 0}</div>
+            <div className="speed-card-val">{displayVals.ul}</div>
             <div className="speed-card-label">upload_speed (Mbps)</div>
           </div>
           <div className="speed-card">
-            <div className="speed-card-val">{data?.latency || 0}</div>
+            <div className="speed-card-val">{displayVals.ping}</div>
             <div className="speed-card-label">latency (ms)</div>
           </div>
         </motion.div>
       )}
-      {data?.server && (
+      {data?.server && !isBusy && (
         <div style={{ fontSize: '0.7rem', color: 'var(--text-secondary)', textAlign: 'center', marginTop: '10px' }}>
           Test Server: <strong style={{ color: 'var(--text-primary)' }}>{data.server}</strong>
         </div>
@@ -155,18 +211,24 @@ const AnalyzeThrottlingPanel = () => {
 const GetQuickCheckPanel = () => {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [backendOnline, setBackendOnline] = useState(true);
 
   const fetchCheck = useCallback(async () => {
     if (loading) return; 
     setLoading(true);
-    try { setData(await get_quick_check()); setError(null); }
-    catch (e) { setError(e.message || "Failed"); }
-    finally { setLoading(false); }
+    try { 
+      const res = await get_quick_check(); 
+      setData(res);
+      setBackendOnline(true);
+    } catch (e) { 
+      setBackendOnline(false); 
+    } finally { 
+      setLoading(false); 
+    }
   }, [loading]);
 
-  // Real-time polling
-  useInterval(() => { fetchCheck(); }, 15000); // 15s polling to avoid spamming the UI too fast
+  // Real-time polling specifically isolated to Quick Check
+  useInterval(() => { fetchCheck(); }, 5000); 
 
   return (
     <div className="dashboard-panel">
@@ -174,20 +236,27 @@ const GetQuickCheckPanel = () => {
       <button className="api-btn api-btn-outline" onClick={fetchCheck} disabled={loading}>
         {loading ? <><Spinner /> Checking…</> : '🔍 Quick Check'}
       </button>
-      {error && <p className="panel-error">⚠ {error}</p>}
-      {data && (
+      
+      {!backendOnline && <p className="panel-error">⚠ Backend Offline</p>}
+      
+      {backendOnline && data && (
         <motion.div className="result-box" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}>
           <div className="result-row">
             <span className="result-key">status</span>
-            <span className={`result-val ${data?.status === 'normal' ? 'safe' : 'danger'}`}>{data?.status || 'N/A'}</span>
+            <span className={`result-val ${data?.status === 'good' ? 'safe' : data?.status === 'moderate' ? 'warn' : 'danger'}`}>
+              {data?.status || 'N/A'}
+            </span>
           </div>
+          {/* Removed avg_speed per instructions */}
           <div className="result-row">
-            <span className="result-key">avg_speed (Mbps)</span>
-            <span className="result-val">{data?.avg_speed || 0}</span>
+            <span className="result-key">latency (ms)</span>
+            <span className="result-val">{data?.latency || 0}</span>
           </div>
           <div className="result-row">
             <span className="result-key">latency_classification</span>
-            <span className={`result-val ${data?.latency_classification === 'Good' ? 'safe' : 'warn'}`}>{data?.latency_classification || 'N/A'}</span>
+            <span className={`result-val ${data?.latency_classification === 'Excellent' || data?.latency_classification === 'Good' ? 'safe' : data?.latency_classification === 'Moderate' ? 'warn' : 'danger'}`}>
+              {data?.latency_classification || 'N/A'}
+            </span>
           </div>
           <div className="result-row">
             <span className="result-key">analysis.explanation</span>
@@ -306,14 +375,15 @@ const PredictThrottlingPanel = () => {
       {data?.predictions && !data?.error && (
         <motion.div className="predict-list" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
           {data?.predictions?.map((p, i) => {
-            const hour = new Date(p.hour).getHours();
-            const pct  = Math.round((p.throttling_probability || 0) * 100);
-            const high = pct > 60;
+            const high = p.probability > 70;
+            const med = p.probability >= 40 && p.probability <= 70;
+            const colorCode = high ? '#ff4d4d' : med ? '#ffa500' : '#00c864';
+            
             return (
               <div key={i} className={`predict-cell ${high ? 'high-risk' : ''}`}>
-                <div className="predict-hour">{String(hour).padStart(2,'0')}:00</div>
-                <div className="predict-prob" style={{ color: high ? '#ff4d4d' : '#fff' }}>{pct}%</div>
-                <div style={{ fontSize: '0.55rem', color: 'var(--text-secondary)', marginTop: 2 }}>{p.likely_type || ''}</div>
+                <div className="predict-hour">{p.time}</div>
+                <div className="predict-prob" style={{ color: colorCode }}>{p.probability}%</div>
+                <div style={{ fontSize: '0.6rem', color: 'var(--text-secondary)', marginTop: 4, textAlign: 'center' }}>{p.type}</div>
               </div>
             );
           })}

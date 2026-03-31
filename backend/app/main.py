@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 import random
@@ -85,6 +85,113 @@ async def measure_speed():
 
     return result
 
+@app.websocket("/api/v1/ws/speed-test")
+async def websocket_speed_test(websocket: WebSocket):
+    await websocket.accept()
+    try:
+        # 1. Initial State
+        await websocket.send_json({"type": "status", "message": "Initializing Speed Test..."})
+        await asyncio.sleep(0.5)
+
+        # 2. Server Selection
+        await websocket.send_json({"type": "status", "message": "Finding best server..."})
+        
+        def get_st():
+            st = speedtest.Speedtest()
+            st.get_best_server()
+            return st
+            
+        try:
+            st = await asyncio.to_thread(get_st)
+            server = st.best['sponsor'] + " - " + st.best['name']
+            await websocket.send_json({"type": "status", "message": f"Connected to {server}"})
+            await websocket.send_json({"type": "ping", "value": round(st.results.ping, 2)})
+        except Exception:
+            server = "Fallback Server"
+            await websocket.send_json({"type": "status", "message": "Using Fallback Server"})
+            await websocket.send_json({"type": "ping", "value": round(random.uniform(10, 40), 2)})
+
+        # 3. Download Test
+        await websocket.send_json({"type": "status", "message": "Testing Download Speed..."})
+        
+        # Simulate local progress while real test runs
+        dl_speed = 0.0
+        
+        async def dl_task():
+            nonlocal dl_speed
+            try:
+                def run_dl():
+                    st.download()
+                    return st.results.dict()["download"] / 1_000_000
+                return await asyncio.to_thread(run_dl)
+            except Exception:
+                await asyncio.sleep(2.0)
+                return random.uniform(150.0, 300.0)
+
+        # Start real DL test
+        dl_future = asyncio.create_task(dl_task())
+        
+        # While testing, send partial updates
+        while not dl_future.done():
+            # Mock incremental progress
+            dl_speed += random.uniform(10.0, 30.0)
+            if dl_speed > 800: dl_speed = 800 # Cap mock
+            await websocket.send_json({"type": "progress", "download": round(dl_speed, 2)})
+            await asyncio.sleep(0.2)
+            
+        dl_final = await dl_future
+        await websocket.send_json({"type": "progress", "download": round(dl_final, 2)})
+
+        # 4. Upload Test
+        await websocket.send_json({"type": "status", "message": "Testing Upload Speed..."})
+        
+        ul_speed = 0.0
+        
+        async def ul_task():
+            nonlocal ul_speed
+            try:
+                def run_ul():
+                    st.upload()
+                    return st.results.dict()["upload"] / 1_000_000
+                return await asyncio.to_thread(run_ul)
+            except Exception:
+                await asyncio.sleep(1.5)
+                return random.uniform(100.0, 250.0)
+
+        ul_future = asyncio.create_task(ul_task())
+        
+        while not ul_future.done():
+            ul_speed += random.uniform(5.0, 15.0)
+            if ul_speed > 400: ul_speed = 400
+            await websocket.send_json({"type": "progress", "upload": round(ul_speed, 2)})
+            await asyncio.sleep(0.2)
+            
+        ul_final = await ul_future
+        await websocket.send_json({"type": "progress", "upload": round(ul_final, 2)})
+
+        # 5. Final Result
+        result = {
+            "download_speed": round(dl_final, 2),
+            "upload_speed": round(ul_final, 2),
+            "latency": round(st.results.ping if 'st' in locals() else random.uniform(10, 40), 2),
+            "timestamp": datetime.utcnow().isoformat(),
+            "server": server
+        }
+        
+        mock_logs.insert(0, result)
+        if len(mock_logs) > 50: mock_logs.pop()
+
+        await websocket.send_json({"type": "result", "data": result})
+        await websocket.send_json({"type": "status", "message": "Test Complete"})
+
+    except WebSocketDisconnect:
+        print("Client disconnected")
+    except Exception as e:
+        print(f"WS Speed Test Error: {e}")
+        await websocket.send_json({"type": "error", "message": str(e)})
+    finally:
+        await websocket.close()
+
 @app.post("/api/v1/analyze-throttling")
 @app.get("/api/v1/analyze-throttling")
 async def analyze_throttling():
@@ -131,17 +238,37 @@ async def analyze_throttling():
 @app.get("/api/v1/quick-check")
 async def quick_check():
     """
-    Fast health check. Returns network status, avg speed, latency classification
+    Fast health check returning dynamic status, latency, and analysis explanation.
     """
-    status = "normal" if random.random() > 0.15 else "throttling"
-    avg_spd = sum(l["download_speed"] for l in mock_logs) / len(mock_logs) if mock_logs else 850.5
+    # Dynamic status
+    status = random.choice(["good", "moderate", "poor"])
+    
+    # Dynamic latency 5 - 150ms
+    latency = round(random.uniform(5.0, 150.0), 2)
+    
+    # Latency classification
+    if latency < 20:
+        latency_class = "Excellent"
+    elif latency < 50:
+        latency_class = "Good"
+    elif latency < 100:
+        latency_class = "Moderate"
+    else:
+        latency_class = "Poor"
+        
+    explanations = [
+        "Network is stable",
+        "Minor fluctuations detected",
+        "Possible congestion",
+        "Latency spikes observed"
+    ]
     
     return {
         "status": status,
-        "avg_speed": round(avg_spd, 2),
-        "latency_classification": "Good" if status == "normal" else "Poor",
+        "latency": latency,
+        "latency_classification": latency_class,
         "analysis": {
-            "explanation": "Connections appear stable and consistently hitting provisioned caps." if status == "normal" else "Detected artificial protocol degradation on HTTPs traffic."
+            "explanation": random.choice(explanations)
         }
     }
 
@@ -184,25 +311,43 @@ async def generate_report():
 @app.get("/api/v1/predict-throttling")
 async def predict_throttling():
     """
-    Predict future throttling probability.
+    Predict future throttling probability using an isolated decreasing trend logic.
     """
-    await asyncio.sleep(0.6)
+    await asyncio.sleep(0.5)
     hours_ahead = 6
-    now = datetime.utcnow()
+    now = datetime.now()
     predictions = []
+    
+    # Start high
+    current_prob = random.uniform(85.0, 95.0)
     
     for i in range(hours_ahead):
         pred_time = now + timedelta(hours=i+1)
-        prob = random.uniform(0.05, 0.95)
-        # Peak hours usually higher probability
-        if 18 <= pred_time.hour <= 22:
-            prob = min(prob + 0.3, 0.95)
+        time_str = pred_time.strftime("%H:00")
+        
+        # Add random noise (-5 to +10) but ensure general downward trend by decaying
+        # User example: 90 -> 75 -> 60 -> 40 -> 25 -> 10
+        drop = random.uniform(10.0, 20.0)
+        noise = random.uniform(-5.0, 5.0)
+        
+        if i > 0:
+            current_prob = current_prob - drop + noise
+            
+        # Clamp between 5 and 99
+        current_prob = max(5.0, min(current_prob, 99.0))
+        prob_int = int(round(current_prob))
+        
+        if prob_int > 70:
+            t_type = "Active Filtering"
+        elif 40 <= prob_int <= 70:
+            t_type = "Congestion"
+        else:
+            t_type = "Normal Traffic"
             
         predictions.append({
-            "hour": pred_time.isoformat(),
-            "throttling_probability": round(prob, 2),
-            "expected_speed_drop": round(prob * 500, 2),
-            "likely_type": "Congestion" if prob < 0.6 else "Active Filtering"
+            "time": time_str,
+            "probability": prob_int,
+            "type": t_type
         })
         
     return {"predictions": predictions}
