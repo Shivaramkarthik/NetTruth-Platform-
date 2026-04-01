@@ -95,7 +95,6 @@ PyMsgBox==2.0.1
 pynput==1.8.1
 pyparsing==3.3.2
 pyperclip==1.11.0
-pypiwin32==223
 PyRect==0.2.0
 PyScreeze==1.0.1
 pytesseract==0.3.13
@@ -103,10 +102,8 @@ python-dateutil==2.9.0.post0
 python-dotenv==1.2.1
 python-jose==3.5.0
 python-multipart==0.0.22
-pyttsx3==2.99
 pytweening==1.2.0
 pytz==2025.2
-pywin32==311
 PyYAML==6.0.3
 redis==7.3.0
 referencing==0.37.0
