@@ -11,6 +11,8 @@ import httpx
 
 app = FastAPI(title="NetTruth Live API Backend", version="2.0")
 
+PORT = int(os.environ.get("PORT", 8000))
+
 # Setup CORS for the frontend
 app.add_middleware(
     CORSMiddleware,

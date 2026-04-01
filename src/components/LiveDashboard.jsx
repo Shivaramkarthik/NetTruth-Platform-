@@ -63,7 +63,8 @@ const RunSpeedTestPanel = () => {
       // 1. Latency Measurement (Ping)
       setStatusMsg('Measuring latency...');
       const t0 = performance.now();
-      await fetch('/api/v1/health', { cache: 'no-store' });
+      const baseUrl = import.meta.env.VITE_API_URL || "";
+      await fetch(`${baseUrl}/api/v1/health`, { cache: 'no-store' });
       const pingVal = (performance.now() - t0).toFixed(2);
       document.getElementById("latency").innerText = pingVal;
 

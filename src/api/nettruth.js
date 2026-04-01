@@ -1,7 +1,7 @@
 // Use the Vite proxy in development; fallback to the production URL if needed.
-const API_URL = ""; 
+const API_URL = import.meta.env.VITE_API_URL || ""; 
 // If API_URL is empty, it uses the same origin as the frontend (which is proxied in vite.config.js)
-const BASE = "/api/v1";
+const BASE = API_URL ? `${API_URL}/api/v1` : "/api/v1";
 
 const get = async (path) => {
   try {
