@@ -114,7 +114,7 @@ const NetworkMap = () => {
       center: [20.5937, 78.9629], zoom: 5,
       zoomControl: false, attributionControl: false,
     });
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
       maxZoom: 18,
     }).addTo(leafletMap.current);
     L.control.zoom({ position: 'bottomright' }).addTo(leafletMap.current);

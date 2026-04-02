@@ -44,12 +44,7 @@ function App() {
 
   return (
     <div className="app-container">
-      {backendDown && (
-        <div className="backend-alert">
-          <span className="dot" style={{ backgroundColor: '#ffa500' }}></span>
-          <strong>Backend Waking Up:</strong> The server may take up to 30 seconds on first visit. Please wait and refresh if needed.
-        </div>
-      )}
+
       <Hero />
       <Suspense fallback={<SectionFallback />}><NetworkMap /></Suspense>
       <Suspense fallback={<SectionFallback />}><MissionStatement /></Suspense>
