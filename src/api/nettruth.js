@@ -9,10 +9,8 @@ const get = async (path) => {
     if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
     return await res.json();
   } catch (error) {
-    if (error.name === 'TypeError' && error.message === 'Failed to fetch') {
-      throw new Error("Backend Offline: The NetTruth server is unreachable.");
-    }
-    throw error;
+    console.error(`API GET failed [${path}]:`, error.message);
+    return null;  // Never crash the UI
   }
 };
 
@@ -33,10 +31,8 @@ const post = async (path, body = {}) => {
     }
     return await res.json();
   } catch (error) {
-    if (error.name === 'TypeError' && error.message === 'Failed to fetch') {
-      throw new Error("Backend Offline: The NetTruth server is unreachable.");
-    }
-    throw error;
+    console.error(`API POST failed [${path}]:`, error.message);
+    return null;  // Never crash the UI
   }
 };
 

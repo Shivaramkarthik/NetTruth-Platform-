@@ -22,12 +22,18 @@ function App() {
   const [backendDown, setBackendDown] = useState(false);
 
   useEffect(() => {
-    // Ping the backend on mount to check connectivity
-    fetch('/api/v1/health')
-      .then(res => {
-        if (!res.ok) setBackendDown(true);
-      })
-      .catch(() => setBackendDown(true));
+    const apiUrl = import.meta.env.VITE_API_URL;
+    // Only ping backend if API URL is configured
+    if (apiUrl) {
+      fetch(`${apiUrl}/api/v1/health`)
+        .then(res => {
+          if (!res.ok) setBackendDown(true);
+        })
+        .catch(() => setBackendDown(true));
+    } else {
+      // No backend URL configured — show offline notice
+      setBackendDown(true);
+    }
   }, []);
 
   return (
