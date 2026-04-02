@@ -16,7 +16,12 @@ PORT = int(os.environ.get("PORT", 8000))
 # Setup CORS for the frontend
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=[
+        "https://lighthearted-begonia-1c26e0.netlify.app",
+        "http://localhost:5173",
+        "http://localhost:3000",
+        "http://localhost:8001",
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -32,6 +37,10 @@ async def global_exception_handler(request: Request, exc: Exception):
         status_code=500,
         content={"detail": "Internal Server Error", "message": str(exc)},
     )
+
+@app.get("/ping")
+async def ping():
+    return {"status": "alive", "service": "NetTruth"}
 
 @app.get("/api/v1/health")
 async def health_check():

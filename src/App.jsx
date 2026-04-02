@@ -23,25 +23,31 @@ function App() {
 
   useEffect(() => {
     const apiUrl = import.meta.env.VITE_API_URL;
-    // Only ping backend if API URL is configured
-    if (apiUrl) {
-      fetch(`${apiUrl}/api/v1/health`)
-        .then(res => {
-          if (!res.ok) setBackendDown(true);
-        })
-        .catch(() => setBackendDown(true));
-    } else {
-      // No backend URL configured — show offline notice
-      setBackendDown(true);
-    }
+    if (!apiUrl) { setBackendDown(true); return; }
+
+    const checkBackend = async (retries = 1) => {
+      try {
+        const res = await fetch(`${apiUrl}/ping`);
+        if (res.ok) { setBackendDown(false); return; }
+        throw new Error('not ok');
+      } catch {
+        if (retries > 0) {
+          // Render free tier cold start — retry after 3s
+          setTimeout(() => checkBackend(retries - 1), 3000);
+        } else {
+          setBackendDown(true);
+        }
+      }
+    };
+    checkBackend();
   }, []);
 
   return (
     <div className="app-container">
       {backendDown && (
         <div className="backend-alert">
-          <span className="dot" style={{ backgroundColor: '#ff4d4d' }}></span>
-          <strong>Backend Offline:</strong> The diagnostic services are currently unavailable. Please ensure the NetTruth server is running.
+          <span className="dot" style={{ backgroundColor: '#ffa500' }}></span>
+          <strong>Backend Waking Up:</strong> The server may take up to 30 seconds on first visit. Please wait and refresh if needed.
         </div>
       )}
       <Hero />
