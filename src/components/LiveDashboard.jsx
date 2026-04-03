@@ -55,9 +55,8 @@ const RunSpeedTestPanel = () => {
     setStatusMsg('Preparing measurements...');
     
     // Reset display
-    document.getElementById("download").innerText = "0";
-    document.getElementById("upload").innerText = "0";
-    document.getElementById("latency").innerText = "0";
+    setDisplayVals({ dl: 0, ul: 0, ping: 0 });
+    setData(null);
 
     try {
       // 1. Latency Measurement (Ping)
@@ -66,7 +65,7 @@ const RunSpeedTestPanel = () => {
       const baseUrl = import.meta.env.VITE_API_URL || "";
       await fetch(`${baseUrl}/api/v1/health`, { cache: 'no-store' });
       const pingVal = (performance.now() - t0).toFixed(2);
-      document.getElementById("latency").innerText = pingVal;
+      setDisplayVals(prev => ({ ...prev, ping: pingVal }));
 
       // 2. Download Speed (Mbps) - 10MB test file
       setStatusMsg('Measuring download speed...');
@@ -76,7 +75,7 @@ const RunSpeedTestPanel = () => {
       const dlBlob = await dlResp.blob();
       const t2 = performance.now();
       const dlMbps = ((dlBlob.size * 8) / ((t2 - t1) / 1000) / (1024 * 1024)).toFixed(2);
-      document.getElementById("download").innerText = dlMbps;
+      setDisplayVals(prev => ({ ...prev, dl: dlMbps }));
 
       // 3. Upload Speed (Mbps) - 1MB Blob
       setStatusMsg('Measuring upload speed...');
@@ -90,9 +89,10 @@ const RunSpeedTestPanel = () => {
       });
       const t4 = performance.now();
       const ulMbps = ((ulSize * 8) / ((t4 - t3) / 1000) / (1024 * 1024)).toFixed(2);
-      document.getElementById("upload").innerText = ulMbps;
+      setDisplayVals(prev => ({ ...prev, ul: ulMbps }));
 
       setStatusMsg('Test successful.');
+      setData({ server: 'Browser Edge Node (Real-time)' });
     } catch (err) {
       console.error(err);
       setError("Network test failed. Please try again.");
